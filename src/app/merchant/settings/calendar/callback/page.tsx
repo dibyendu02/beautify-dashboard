@@ -39,7 +39,7 @@ export default function CalendarCallbackPage() {
         }
 
         // Handle the OAuth callback
-        const response = await calendarService.handleOAuthCallback(provider, code, state);
+        const response = await calendarService.handleOAuthCallback(provider, code, state || undefined);
 
         if (response.success) {
           setStatus('success');

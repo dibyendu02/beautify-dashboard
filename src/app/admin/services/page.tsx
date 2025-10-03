@@ -244,7 +244,7 @@ export default function AdminServicesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const categories = ['all', 'Hair', 'Massage', 'Skincare', 'Nails', 'Beauty'];
   const statuses = ['all', 'active', 'inactive', 'pending', 'flagged'];
@@ -496,7 +496,7 @@ export default function AdminServicesPage() {
                           <div className="flex items-center">
                             <p className="text-sm font-medium text-gray-900">{service.name}</p>
                             {service.isPopular && (
-                              <TrendingUp className="w-4 h-4 text-orange-500 ml-2" title="Popular Service" />
+                              <TrendingUp className="w-4 h-4 text-orange-500 ml-2" />
                             )}
                           </div>
                           <div className="flex items-center mt-1">
@@ -578,8 +578,13 @@ export default function AdminServicesPage() {
           <div className="px-6 py-4 border-t border-gray-200">
             <Pagination
               currentPage={currentPage}
-              totalPages={Math.ceil(filteredServices.length / itemsPerPage)}
+              totalItems={filteredServices.length}
+              itemsPerPage={itemsPerPage}
               onPageChange={setCurrentPage}
+              onItemsPerPageChange={(newItemsPerPage) => {
+                setItemsPerPage(newItemsPerPage);
+                setCurrentPage(1);
+              }}
             />
           </div>
         </div>

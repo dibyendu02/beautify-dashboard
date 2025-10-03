@@ -475,7 +475,7 @@ export default function AdvancedScheduling() {
           {(['day', 'week', 'month'] as const).map(type => (
             <Button
               key={type}
-              variant={calendarView.type === type ? 'default' : 'ghost'}
+              variant={calendarView.type === type ? 'primary' : 'ghost'}
               size="sm"
               onClick={() => setCalendarView(prev => ({ ...prev, type }))}
             >
@@ -654,7 +654,7 @@ function AppointmentDetailsModal({ appointment, onClose, onStatusChange, onSendR
               {(['scheduled', 'confirmed', 'in-progress', 'completed', 'cancelled'] as const).map(status => (
                 <Button
                   key={status}
-                  variant={appointment.status === status ? 'default' : 'outline'}
+                  variant={appointment.status === status ? 'primary' : 'outline'}
                   size="sm"
                   onClick={() => onStatusChange(appointment.id, status)}
                 >

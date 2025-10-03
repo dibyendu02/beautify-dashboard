@@ -586,7 +586,7 @@ export default function CustomersPage() {
               <div className="mb-4">
                 <p className="text-xs text-gray-500 mb-2">Preferred Services:</p>
                 <div className="flex flex-wrap gap-1">
-                  {customer.preferredServices.slice(0, 2).map((service, index) => (
+                  {customer.preferredServices?.slice(0, 2).map((service, index) => (
                     <span
                       key={index}
                       className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
@@ -594,9 +594,9 @@ export default function CustomersPage() {
                       {service}
                     </span>
                   ))}
-                  {customer.preferredServices.length > 2 && (
+                  {(customer.preferredServices?.length || 0) > 2 && (
                     <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                      +{customer.preferredServices.length - 2} more
+                      +{(customer.preferredServices?.length || 0) - 2} more
                     </span>
                   )}
                 </div>
@@ -661,7 +661,7 @@ export default function CustomersPage() {
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
-                variant={page === pagination.page ? "default" : "outline"}
+                variant={page === pagination.page ? "primary" : "outline"}
                 size="sm"
                 onClick={() => handlePageChange(page)}
                 className={cn(

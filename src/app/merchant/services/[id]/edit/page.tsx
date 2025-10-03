@@ -75,14 +75,14 @@ export default function EditServicePage() {
   useEffect(() => {
     if (currentService) {
       setFormData({
-        name: currentService.name || '',
+        name: currentService.title || '',
         description: currentService.description || '',
         category: currentService.category || '',
         price: currentService.price || 0,
         duration: currentService.duration || 30,
         isActive: currentService.isActive ?? true,
         images: currentService.images || [],
-        features: currentService.features || [],
+        features: currentService.tags || [],
       });
     }
   }, [currentService]);

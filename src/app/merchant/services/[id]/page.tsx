@@ -119,7 +119,7 @@ export default function ServiceDetailsPage() {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{currentService.name}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{currentService.title}</h1>
             <p className="text-gray-600 mt-1">Service details and analytics</p>
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function ServiceDetailsPage() {
                 <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
                   <img
                     src={currentService.images[selectedImage]}
-                    alt={currentService.name}
+                    alt={currentService.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -186,7 +186,7 @@ export default function ServiceDetailsPage() {
                       >
                         <img
                           src={image}
-                          alt={`${currentService.name} ${index + 1}`}
+                          alt={`${currentService.title} ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
                       </button>
@@ -229,11 +229,11 @@ export default function ServiceDetailsPage() {
                 </div>
               </div>
 
-              {currentService.features && currentService.features.length > 0 && (
+              {currentService.tags && currentService.tags.length > 0 && (
                 <div>
                   <h3 className="text-sm font-medium text-gray-700 mb-2">Features</h3>
                   <div className="flex flex-wrap gap-2">
-                    {currentService.features.map((feature, index) => (
+                    {currentService.tags.map((feature, index) => (
                       <span
                         key={index}
                         className="inline-flex items-center bg-primary-100 text-primary-800 text-sm px-3 py-1 rounded-full"
@@ -344,7 +344,7 @@ export default function ServiceDetailsPage() {
                   <span className="text-sm text-gray-600">Views</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-900">
-                  {currentService.views || 0}
+                  0
                 </span>
               </div>
             </div>

@@ -563,14 +563,6 @@ export default function AdminDashboard() {
             data={merchantsData}
             columns={merchantsColumns}
             searchable={true}
-            actionsConfig={{
-              view: true,
-              edit: true,
-              delete: true,
-            }}
-            onAction={(action: string, item: any) => {
-              console.log('Action:', action, 'Item:', item);
-            }}
           />
         </div>
       </div>

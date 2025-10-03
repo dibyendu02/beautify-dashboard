@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import {
   Calendar,
-  Sync,
   CheckCircle,
   XCircle,
   AlertTriangle,
@@ -227,7 +226,7 @@ export default function CalendarSyncDashboard() {
             {isSyncing.bulk ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
-              <Sync className="w-4 h-4 mr-2" />
+              <RefreshCw className="w-4 h-4 mr-2" />
             )}
             Sync Bookings
           </Button>

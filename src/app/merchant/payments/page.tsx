@@ -597,7 +597,7 @@ export default function PaymentsPage() {
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
-                variant={page === pagination.page ? "default" : "outline"}
+                variant={page === pagination.page ? "primary" : "outline"}
                 size="sm"
                 onClick={() => handlePageChange(page)}
                 className={cn(

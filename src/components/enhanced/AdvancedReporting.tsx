@@ -437,7 +437,7 @@ export default function AdvancedReporting() {
                 cx="50%"
                 cy="50%"
                 outerRadius={100}
-                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                label={(props: any) => `${props.name}: ${(props.percent * 100).toFixed(1)}%`}
               >
                 {reportData.segments.services.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />

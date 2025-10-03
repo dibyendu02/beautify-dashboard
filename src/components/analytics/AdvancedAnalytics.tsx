@@ -66,7 +66,7 @@ interface AnalyticsData {
   rating: {
     average: number;
     total: number;
-    distribution: Array<{ rating: number; count: number }>;
+    distribution: Array<{ rating: number; count: number; percentage: number }>;
   };
 }
 
@@ -165,11 +165,11 @@ export default function AdvancedAnalytics() {
           average: 4.7,
           total: 523,
           distribution: [
-            { rating: '5 stars', count: 312, percentage: 59.7 },
-            { rating: '4 stars', count: 156, percentage: 29.8 },
-            { rating: '3 stars', count: 42, percentage: 8.0 },
-            { rating: '2 stars', count: 9, percentage: 1.7 },
-            { rating: '1 star', count: 4, percentage: 0.8 },
+            { rating: 5, count: 312, percentage: 59.7 },
+            { rating: 4, count: 156, percentage: 29.8 },
+            { rating: 3, count: 42, percentage: 8.0 },
+            { rating: 2, count: 9, percentage: 1.7 },
+            { rating: 1, count: 4, percentage: 0.8 },
           ],
         },
       };
@@ -407,7 +407,7 @@ export default function AdvancedAnalytics() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={(props: any) => `${props.name} ${(props.percent * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"

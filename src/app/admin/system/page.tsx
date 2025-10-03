@@ -337,7 +337,7 @@ export default function SystemPage() {
   ];
 
   return (
-    <AdminLayout notifications={notifications}>
+    <AdminLayout>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center">

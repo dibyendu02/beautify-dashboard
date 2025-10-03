@@ -21,6 +21,7 @@ import {
   CreditCard,
   ArrowUpRight,
   Download,
+  ChevronUp,
 } from 'lucide-react';
 import { cn, formatCurrency, formatDate } from '@/lib/utils';
 import Button from '@/components/ui/Button';

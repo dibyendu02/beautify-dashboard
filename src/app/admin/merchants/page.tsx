@@ -983,7 +983,7 @@ export default function MerchantsPage() {
       case 'toggleStatus':
         const newStatus = merchant.status === 'active' ? 'suspended' : 'active';
         setDemoMerchants(prev => 
-          prev.map(m => m.id === merchant.id ? { ...m, status: newStatus as const } : m)
+          prev.map(m => m.id === merchant.id ? { ...m, status: newStatus } : m)
         );
         break;
       case 'delete':
@@ -1059,10 +1059,10 @@ export default function MerchantsPage() {
 
   const columns = [
     {
-      key: 'businessName',
+      key: 'businessName' as keyof MerchantData,
       label: 'Business',
       sortable: true,
-      render: (value: string, row: MerchantData) => (
+      render: (value: any, row: MerchantData) => (
         <div className="flex items-center">
           <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center mr-3">
             <Building className="w-5 h-5 text-white" />
@@ -1078,10 +1078,10 @@ export default function MerchantsPage() {
       ),
     },
     {
-      key: 'ownerName',
+      key: 'ownerName' as keyof MerchantData,
       label: 'Owner',
       sortable: true,
-      render: (value: string, row: MerchantData) => (
+      render: (value: any, row: MerchantData) => (
         <div>
           <div className="font-medium text-slate-900">{value}</div>
           <div className="text-sm text-slate-500">{row.email}</div>
@@ -1089,10 +1089,10 @@ export default function MerchantsPage() {
       ),
     },
     {
-      key: 'status',
+      key: 'status' as keyof MerchantData,
       label: 'Status',
       sortable: true,
-      render: (value: string) => (
+      render: (value: any) => (
         <span className={cn(
           'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
           getStatusColor(value)
@@ -1103,26 +1103,26 @@ export default function MerchantsPage() {
       ),
     },
     {
-      key: 'totalRevenue',
+      key: 'totalRevenue' as keyof MerchantData,
       label: 'Revenue',
       sortable: true,
-      render: (value: number) => (
+      render: (value: any) => (
         <div className="font-medium text-slate-900">{formatCurrency(value)}</div>
       ),
     },
     {
-      key: 'totalBookings',
+      key: 'totalBookings' as keyof MerchantData,
       label: 'Bookings',
       sortable: true,
-      render: (value: number) => (
+      render: (value: any) => (
         <div className="font-medium text-slate-900">{value}</div>
       ),
     },
     {
-      key: 'rating',
+      key: 'rating' as keyof MerchantData,
       label: 'Rating',
       sortable: true,
-      render: (value: number) => (
+      render: (value: any) => (
         <div className="flex items-center">
           <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
           <span className="font-medium text-slate-900">
@@ -1132,10 +1132,10 @@ export default function MerchantsPage() {
       ),
     },
     {
-      key: 'joinDate',
+      key: 'joinDate' as keyof MerchantData,
       label: 'Join Date',
       sortable: true,
-      render: (value: string) => (
+      render: (value: any) => (
         <div className="text-sm text-slate-900">
           {new Date(value).toLocaleDateString()}
         </div>
@@ -1169,7 +1169,7 @@ export default function MerchantsPage() {
   ];
 
   return (
-    <AdminLayout notifications={notifications}>
+    <AdminLayout>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center">

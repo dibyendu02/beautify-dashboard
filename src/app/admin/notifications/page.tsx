@@ -22,6 +22,7 @@ import {
   Filter,
   Search,
   Trash2,
+  CheckSquare,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
@@ -228,7 +229,7 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
-    <AdminLayout notifications={notifications}>
+    <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">

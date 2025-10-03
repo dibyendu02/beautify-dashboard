@@ -303,7 +303,7 @@ export default function EnhancedAnalytics() {
                 strokeWidth={3}
                 name="Current Period"
               />
-              {data[0]?.previousPeriod !== undefined && (
+              {(data[0] as any)?.previousPeriod !== undefined && (
                 <Line 
                   type="monotone" 
                   dataKey="previousPeriod" 
@@ -326,7 +326,7 @@ export default function EnhancedAnalytics() {
                 fillOpacity={0.3}
                 name="Current Period"
               />
-              {data[0]?.previousPeriod !== undefined && (
+              {(data[0] as any)?.previousPeriod !== undefined && (
                 <Area 
                   type="monotone" 
                   dataKey="previousPeriod" 
@@ -346,7 +346,7 @@ export default function EnhancedAnalytics() {
                 fill="#8b5cf6"
                 name="Current Period"
               />
-              {data[0]?.previousPeriod !== undefined && (
+              {(data[0] as any)?.previousPeriod !== undefined && (
                 <Bar 
                   dataKey="previousPeriod" 
                   fill="#94a3b8"

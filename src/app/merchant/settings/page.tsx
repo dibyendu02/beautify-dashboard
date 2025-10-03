@@ -480,7 +480,7 @@ export default function SettingsPage() {
                       <div className="w-20 h-20 bg-primary-100 rounded-xl flex items-center justify-center overflow-hidden">
                         {logoPreview || settings.profile.logo ? (
                           <img 
-                            src={logoPreview || settings.profile.logo} 
+                            src={logoPreview || settings.profile.logo || ''} 
                             alt="Business Logo" 
                             className="w-full h-full object-cover rounded-xl"
                           />
@@ -732,7 +732,7 @@ export default function SettingsPage() {
                         <p className="text-sm text-gray-600">Add an extra layer of security to your account</p>
                       </div>
                       <Button
-                        variant={settings.security.twoFactorAuth ? "default" : "outline"}
+                        variant={settings.security.twoFactorAuth ? "primary" : "outline"}
                         onClick={() => updateSecurity('twoFactorAuth', !settings.security.twoFactorAuth)}
                       >
                         {settings.security.twoFactorAuth ? 'Enabled' : 'Enable'}
@@ -1016,7 +1016,7 @@ export default function SettingsPage() {
                                   </Button>
                                 )}
                                 <Button 
-                                  variant={isConnected ? "outline" : "default"}
+                                  variant={isConnected ? "outline" : "primary"}
                                   size="sm"
                                   onClick={() => isConnected 
                                     ? handleCalendarDisconnect(integration!.id, provider.name)
@@ -1054,10 +1054,10 @@ export default function SettingsPage() {
                               </div>
                             </div>
                             <Button 
-                              variant={settings.integrations[integration.key as keyof typeof settings.integrations].connected ? "outline" : "default"}
+                              variant={(settings.integrations[integration.key as keyof typeof settings.integrations] as {connected: boolean}).connected ? "outline" : "primary"}
                               size="sm"
                             >
-                              {settings.integrations[integration.key as keyof typeof settings.integrations].connected ? 'Disconnect' : 'Connect'}
+                              {(settings.integrations[integration.key as keyof typeof settings.integrations] as {connected: boolean}).connected ? 'Disconnect' : 'Connect'}
                             </Button>
                           </div>
                         </div>
