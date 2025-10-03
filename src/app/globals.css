@@ -1,0 +1,271 @@
+@import "tailwindcss";
+
+/* ======================================
+   BEAUTIFY DASHBOARD - LIGHT MODE THEME
+   ====================================== */
+
+:root {
+  /* Light mode color scheme */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted: #f8fafc;
+  --muted-foreground: #64748b;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --primary: #ec4899;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --ring: #ec4899;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ======================================
+   BASE STYLES
+   ====================================== */
+
+html {
+  background: var(--background);
+  color-scheme: light;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ======================================
+   FORM ELEMENTS
+   ====================================== */
+
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #1f2937;
+}
+
+input[type="text"]:focus, 
+input[type="email"]:focus, 
+input[type="password"]:focus, 
+input[type="search"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+  outline: none;
+}
+
+/* Placeholder text */
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+/* Select options */
+option {
+  color: #1f2937;
+  background-color: #ffffff;
+}
+
+/* ======================================
+   BUTTONS AND INTERACTIVE ELEMENTS
+   ====================================== */
+
+/* Primary buttons */
+button[class*="bg-pink"],
+button[class*="bg-rose"],
+button[class*="bg-primary"],
+.bg-pink-600,
+.bg-pink-700,
+.bg-rose-600,
+.bg-rose-700,
+.bg-primary-600,
+.bg-primary-700 {
+  color: #ffffff;
+}
+
+/* Secondary buttons */
+button[class*="bg-gray"],
+.bg-gray-100,
+.bg-gray-200 {
+  color: #374151;
+}
+
+/* Success buttons */
+button[class*="bg-green"],
+.bg-green-600,
+.bg-green-700 {
+  color: #ffffff;
+}
+
+/* Danger buttons */
+button[class*="bg-red"],
+.bg-red-600,
+.bg-red-700 {
+  color: #ffffff;
+}
+
+/* ======================================
+   COMPONENT OVERRIDES
+   ====================================== */
+
+/* Ensure cards have proper backgrounds */
+.bg-white {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+/* Ensure proper text colors on light backgrounds */
+.bg-gray-50,
+.bg-gray-100,
+.bg-pink-50,
+.bg-rose-50,
+.bg-blue-50,
+.bg-green-50,
+.bg-yellow-50 {
+  color: #1f2937;
+}
+
+/* Status badges */
+.bg-green-100 { color: #065f46; }
+.bg-yellow-100 { color: #92400e; }
+.bg-red-100 { color: #991b1b; }
+.bg-blue-100 { color: #1e40af; }
+.bg-gray-100 { color: #374151; }
+
+/* ======================================
+   GRADIENTS AND SPECIAL CASES
+   ====================================== */
+
+/* Light gradients should have dark text */
+[class*="from-pink-50"],
+[class*="from-rose-50"],
+[class*="from-gray-50"],
+[class*="from-blue-50"],
+[class*="via-white"],
+[class*="to-white"] {
+  color: #1f2937;
+}
+
+/* Dark gradients should have light text */
+[class*="from-pink-500"],
+[class*="from-pink-600"],
+[class*="from-rose-500"],
+[class*="from-rose-600"],
+[class*="from-gray-800"],
+[class*="from-gray-900"] {
+  color: #ffffff;
+}
+
+/* Gradient buttons */
+[class*="bg-gradient-to-r"][class*="from-pink"],
+[class*="bg-gradient-to-r"][class*="from-rose"] {
+  color: #ffffff;
+}
+
+/* ======================================
+   UTILITY OVERRIDES FOR CONSISTENT THEMING
+   ====================================== */
+
+/* Ensure consistent primary colors */
+.text-primary {
+  color: #ec4899;
+}
+
+.border-primary {
+  border-color: #ec4899;
+}
+
+/* Ensure proper link colors */
+a:not([class*="bg-"]) {
+  color: #ec4899;
+}
+
+a:hover:not([class*="bg-"]) {
+  color: #db2777;
+}
+
+/* ======================================
+   ACCESSIBILITY AND FOCUS STATES
+   ====================================== */
+
+/* Focus rings */
+*:focus-visible {
+  outline: 2px solid #ec4899;
+  outline-offset: 2px;
+}
+
+/* Remove default focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Ensure sufficient contrast for disabled elements */
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ======================================
+   COMPONENT LIBRARY COMPATIBILITY
+   ====================================== */
+
+/* Ensure compatibility with UI libraries */
+.prose {
+  color: #1f2937;
+}
+
+/* Toast notifications */
+.toast {
+  background-color: #ffffff;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal overlays */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #ffffff;
+  color: #1f2937;
+}
