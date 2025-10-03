@@ -15,7 +15,7 @@ import {
   Clock,
   TrendingUp,
   Eye,
-  Click,
+  MousePointer,
   Share2,
   Star,
   DollarSign,

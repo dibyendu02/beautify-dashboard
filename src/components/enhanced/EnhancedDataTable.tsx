@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -440,7 +440,7 @@ export default function EnhancedDataTable({
                               className={action.color}
                               title={action.title || action.label}
                             >
-                              <action.icon className="w-4 h-4" />
+                              {action.icon && React.createElement(action.icon as any, { className: "w-4 h-4" })}
                             </Button>
                           ))}
                           {onDelete && (

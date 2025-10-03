@@ -357,6 +357,16 @@ export const bookingService = {
     return response.data;
   },
   
+  create: async (bookingData: any) => {
+    const response = await api.post('/bookings', bookingData);
+    return response.data;
+  },
+  
+  update: async (id: string, data: any) => {
+    const response = await api.put(`/bookings/${id}`, data);
+    return response.data;
+  },
+  
   updateStatus: async (id: string, status: string) => {
     const response = await api.put(`/bookings/${id}/status`, { status });
     return response.data;

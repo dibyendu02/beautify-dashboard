@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Eye, EyeOff, Loader2, Store, ArrowRight, CheckCircle, AlertCircle, LogOut } from 'lucide-react';
@@ -14,7 +14,7 @@ interface MerchantLoginForm {
   rememberMe: boolean;
 }
 
-export default function MerchantLoginPage() {
+function MerchantLoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
@@ -470,5 +470,24 @@ export default function MerchantLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function MerchantLoginPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <MerchantLoginPageContent />
+    </Suspense>
   );
 }

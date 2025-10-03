@@ -103,7 +103,7 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
             // Update all auth state synchronously in batch
             setToken(storedToken);
             setUser(parsedUser);
-            setApplication(merchantApplication);
+            setApplication(merchantApplication as MerchantApplication);
             
             console.log('✅ MerchantAuth: Successfully restored auth state from localStorage');
           } catch (error) {

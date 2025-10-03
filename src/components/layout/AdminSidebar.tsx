@@ -266,9 +266,9 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
                     )}
                   />
                   <span className="flex-1">{item.name}</span>
-                  {item.badge && (
+                  {(item as any).badge && (
                     <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-red-100 text-red-600 rounded-full">
-                      {item.badge}
+                      {(item as any).badge}
                     </span>
                   )}
                 </Link>

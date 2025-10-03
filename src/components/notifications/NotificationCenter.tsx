@@ -9,16 +9,12 @@ import {
   Calendar,
   DollarSign,
   MessageSquare,
-  User,
   Package,
   Star,
-  Settings,
-  Filter,
-  MarkAsRead,
   Trash2,
 } from 'lucide-react';
 import { socketService } from '@/services/socket';
-import { formatDate, cn } from '@/lib/utils';
+import { formatRelativeTime, cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';
 
@@ -401,7 +397,7 @@ export default function NotificationCenter() {
                               {notification.message}
                             </p>
                             <p className="text-xs text-gray-400 mt-2">
-                              {formatDate(notification.createdAt, 'relative')}
+                              {formatRelativeTime(notification.createdAt)}
                             </p>
                           </div>
 

@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       <div className="hidden lg:flex lg:flex-shrink-0">
         <div className="flex flex-col w-64">
-          <Sidebar isOpen={true} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+          <Sidebar />
         </div>
       </div>
       
@@ -87,14 +87,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="fixed inset-0 z-40 flex lg:hidden">
           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
           <div className="relative flex flex-col flex-1 w-64 bg-white">
-            <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+            <Sidebar />
           </div>
         </div>
       )}
 
       {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         
         <main className="flex-1 overflow-y-auto bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

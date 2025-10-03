@@ -47,6 +47,7 @@ export interface ImportJob {
   errorCount: number;
   errors: ImportError[];
   fileName: string;
+  errorMessage?: string;
   createdAt: string;
   completedAt?: string;
   templateId?: string;

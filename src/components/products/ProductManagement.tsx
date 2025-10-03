@@ -17,7 +17,7 @@ import {
   Image as ImageIcon,
   ExternalLink,
 } from 'lucide-react';
-// Removed API imports - using demo data
+import { productService, categoryService } from '@/services/api';
 import { formatCurrency, cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import { toast } from 'react-hot-toast';

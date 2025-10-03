@@ -27,6 +27,7 @@ import {
   Heart,
   ThumbsUp,
   MessageSquare,
+  XCircle,
 } from 'lucide-react';
 import {
   BarChart,
@@ -569,7 +570,7 @@ export default function EnhancedServiceAnalytics() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ category, revenue }) => `${category}: ${formatCurrency(revenue)}`}
+                      label={({ category, revenue }: any) => `${category}: ${formatCurrency(revenue as number)}`}
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="revenue"
@@ -971,8 +972,6 @@ export default function EnhancedServiceAnalytics() {
                       }))}
                     >
                       <RadialBar
-                        minAngle={15}
-                        clockWise
                         dataKey="score"
                         cornerRadius={10}
                         fill="#8884d8"

@@ -445,7 +445,7 @@ export default function EnhancedAnalytics() {
               {datePresets.map(preset => (
                 <Button
                   key={preset.value}
-                  variant={filters.dateRange.preset === preset.value ? 'default' : 'outline'}
+                  variant={filters.dateRange.preset === preset.value ? 'primary' : 'outline'}
                   size="sm"
                   onClick={() => updateDateRange(preset.value as DateRange['preset'])}
                 >
@@ -581,7 +581,7 @@ export default function EnhancedAnalytics() {
             {(['line', 'area', 'bar'] as const).map(chartType => (
               <Button
                 key={chartType}
-                variant={activeChart === chartType ? 'default' : 'outline'}
+                variant={activeChart === chartType ? 'primary' : 'outline'}
                 size="sm"
                 onClick={() => setActiveChart(chartType)}
               >

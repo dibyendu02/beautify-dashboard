@@ -38,7 +38,7 @@ export const usePerformance = () => {
 // Optimized debounce hook
 export const useDebounce = <T>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     if (timeoutRef.current) {
@@ -63,7 +63,7 @@ export const useDebounce = <T>(value: T, delay: number): T => {
 export const useThrottle = <T>(value: T, limit: number): T => {
   const [throttledValue, setThrottledValue] = useState<T>(value);
   const lastRunRef = useRef<number>(0);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     const now = Date.now();
@@ -152,7 +152,7 @@ export const useOptimizedApi = <T>(
   const [error, setError] = useState<Error | null>(null);
   
   const cacheRef = useRef<Map<string, { data: T; timestamp: number }>>(new Map());
-  const abortControllerRef = useRef<AbortController>();
+  const abortControllerRef = useRef<AbortController | undefined>(undefined);
 
   const cacheKey = JSON.stringify(dependencies);
 
@@ -329,7 +329,7 @@ export const useWebWorker = <T, R>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   
-  const workerRef = useRef<Worker>();
+  const workerRef = useRef<Worker | undefined>(undefined);
 
   useEffect(() => {
     // Create worker blob
