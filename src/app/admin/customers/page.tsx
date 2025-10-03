@@ -246,7 +246,7 @@ export default function CustomersPage() {
 
   // Filter and sort customers
   const filteredAndSortedCustomers = useMemo(() => {
-    let filtered = customers.filter(customer => {
+    const filtered = customers.filter(customer => {
       const matchesSearch = !searchTerm || 
         customer.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         customer.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||

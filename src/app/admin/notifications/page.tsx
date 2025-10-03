@@ -246,7 +246,7 @@ export default function NotificationsPage() {
               size="sm"
               disabled={unreadCount === 0}
             >
-              <MarkAsRead className="w-4 h-4 mr-2" />
+              <CheckSquare className="w-4 h-4 mr-2" />
               Mark All Read
             </Button>
           </div>
