@@ -280,9 +280,9 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
           <div className="p-4 border-t border-slate-200">
             <button
               onClick={handleLogout}
-              className="flex items-center w-full px-4 py-3 text-sm font-medium text-black rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors group"
+              className="flex items-center w-full px-4 py-3 text-sm font-medium text-white bg-red-600 rounded-xl hover:bg-red-700 transition-colors group"
             >
-              <LogOut className="w-5 h-5 mr-3 text-black group-hover:text-red-500" />
+              <LogOut className="w-5 h-5 mr-3 text-white" />
               Sign Out
             </button>
           </div>

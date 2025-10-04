@@ -6,6 +6,7 @@ import { Menu, Bell, Search, Settings, MessageSquare, User, LogOut, ChevronDown 
 import { cn } from '@/lib/utils';
 import NotificationCenter from '@/components/notifications/NotificationCenter';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -18,6 +19,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps) {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const { user, logout } = useMerchantAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -39,8 +41,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }: HeaderProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate to search results or trigger search
-      window.location.href = `/merchant/search?q=${encodeURIComponent(searchQuery.trim())}`;
+      // Navigate to search results using Next.js router
+      router.push(`/merchant/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 

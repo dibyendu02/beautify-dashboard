@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Eye, EyeOff, Loader2, Store, ArrowRight, CheckCircle, AlertCircle, LogOut } from 'lucide-react';
@@ -22,6 +22,7 @@ function MerchantLoginPageContent() {
   const [resetEmail, setResetEmail] = useState('');
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
+  const redirectAttempted = useRef(false);
   
   const { 
     login, 
@@ -46,24 +47,37 @@ function MerchantLoginPageContent() {
 
   // Check if merchant is already logged in
   useEffect(() => {
-    console.log('🔍 LoginPage useEffect:', { isAuthenticated, user: !!user, isLoading, isRedirecting });
+    console.log('🔍 LoginPage useEffect:', { isAuthenticated, user: !!user, isLoading, redirectAttempted: redirectAttempted.current });
     
-    // Only proceed if auth state is fully loaded and stable
-    if (isLoading) {
-      console.log('🔍 LoginPage: Auth still loading, waiting...');
+    // Only proceed if auth state is fully loaded and we haven't attempted redirect yet
+    if (isLoading || redirectAttempted.current) {
       return;
     }
 
-    // Only redirect if we're not already redirecting and have both authentication and user data
-    if (!isRedirecting && isAuthenticated && user) {
+    // Only redirect if we have both authentication and user data
+    if (isAuthenticated && user) {
       const redirectTo = searchParams.get('redirect') || '/merchant';
       console.log('🚀 LoginPage: User authenticated, redirecting to:', redirectTo);
       
+      redirectAttempted.current = true;
       setIsRedirecting(true);
-      // Use router.replace to prevent back button issues
-      router.replace(redirectTo);
+      
+      // Use a longer timeout to ensure state is stable and avoid race conditions
+      const timeoutId = setTimeout(() => {
+        router.replace(redirectTo);
+      }, 150);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [isAuthenticated, user, router, searchParams, isLoading, isRedirecting]);
+  }, [isAuthenticated, user, isLoading, router, searchParams]);
+
+  // Reset redirect flag when authentication state changes to logged out
+  useEffect(() => {
+    if (!isAuthenticated) {
+      redirectAttempted.current = false;
+      setIsRedirecting(false);
+    }
+  }, [isAuthenticated]);
 
   // Check for registration success parameter
   useEffect(() => {
@@ -383,7 +397,7 @@ function MerchantLoginPageContent() {
               </div>
 
               {/* Remember me checkbox */}
-              <div className="flex items-center justify-between">
+              <div className="space-y-3">
                 <label className="flex items-center">
                   <input
                     {...register('rememberMe')}
@@ -478,7 +492,26 @@ function LoadingSpinner() {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent mx-auto mb-4"></div>
-        <p className="text-gray-600">Loading...</p>
+        <p className="text-gray-600">Loading merchant login...</p>
+      </div>
+    </div>
+  );
+}
+
+function ErrorFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <AlertCircle className="w-6 h-6 text-red-600" />
+        </div>
+        <p className="text-gray-600 mb-4">Something went wrong loading the login page.</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+        >
+          Reload Page
+        </button>
       </div>
     </div>
   );

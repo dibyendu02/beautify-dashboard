@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/components/providers/ReduxProvider";
-import { AuthProvider } from "@/hooks/useAuth";
 import { Toaster } from "react-hot-toast";
+import ConditionalAuthProvider from "@/components/providers/ConditionalAuthProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,38 +24,38 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased bg-white text-gray-900`}>
-        <AuthProvider>
-          <ReduxProvider>
+        <ReduxProvider>
+          <ConditionalAuthProvider>
             {children}
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
+          </ConditionalAuthProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#ffffff',
+                color: '#1f2937',
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+              },
+              success: {
                 style: {
-                  background: '#ffffff',
-                  color: '#1f2937',
-                  borderRadius: '8px',
-                  border: '1px solid #e5e7eb',
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  background: '#10b981',
+                  color: '#ffffff',
+                  border: 'none',
                 },
-                success: {
-                  style: {
-                    background: '#10b981',
-                    color: '#ffffff',
-                    border: 'none',
-                  },
+              },
+              error: {
+                style: {
+                  background: '#ef4444',
+                  color: '#ffffff',
+                  border: 'none',
                 },
-                error: {
-                  style: {
-                    background: '#ef4444',
-                    color: '#ffffff',
-                    border: 'none',
-                  },
-                },
-              }}
-            />
-          </ReduxProvider>
-        </AuthProvider>
+              },
+            }}
+          />
+        </ReduxProvider>
       </body>
     </html>
   );

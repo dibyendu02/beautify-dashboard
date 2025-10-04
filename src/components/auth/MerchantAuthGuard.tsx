@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, ReactNode } from 'react';
+import { useEffect, ReactNode, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useMerchantAuth } from '@/hooks/useMerchantAuth';
 import { Loader2, AlertTriangle, CheckCircle, Clock, XCircle } from 'lucide-react';
@@ -14,15 +14,21 @@ export const MerchantAuthGuard = ({ children }: MerchantAuthGuardProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, user, application, isLoading } = useMerchantAuth();
+  const redirectAttempted = useRef(false);
 
   // Routes that don't require authentication
-  const publicRoutes = ['/merchant/login', '/merchant/register', '/merchant/apply'];
+  const publicRoutes = ['/merchant/login', '/merchant/register', '/merchant/apply', '/merchant/reset-password'];
   const isPublicRoute = publicRoutes.includes(pathname);
   
   useEffect(() => {
+    // Reset redirect flag when pathname changes
+    redirectAttempted.current = false;
+  }, [pathname]);
+  
+  useEffect(() => {
     // Only proceed with route checks if auth state is fully loaded
-    if (isLoading) {
-      console.log('🛡️ MerchantAuthGuard: Auth still loading, waiting...');
+    if (isLoading || redirectAttempted.current) {
+      console.log('🛡️ MerchantAuthGuard: Auth still loading or redirect attempted, waiting...');
       return;
     }
 
@@ -34,20 +40,59 @@ export const MerchantAuthGuard = ({ children }: MerchantAuthGuardProps) => {
       isPublicRoute
     });
 
-    // If not authenticated and trying to access protected route
-    if (!isAuthenticated && !isPublicRoute) {
-      const redirectUrl = encodeURIComponent(pathname);
-      console.log('🔒 MerchantAuthGuard: Redirecting to login, not authenticated for:', pathname);
-      router.push(`/merchant/login?redirect=${redirectUrl}`);
-      return;
-    }
+    // Progressive auth checking with multiple validation layers
+    const performAuthCheck = () => {
+      // Layer 1: Check React state
+      const hasReactAuth = isAuthenticated && user;
+      
+      // Layer 2: Check localStorage
+      const currentToken = localStorage.getItem('merchantAuthToken');
+      const currentUser = localStorage.getItem('merchantUser');
+      const hasStoredAuth = !!(currentToken && currentUser);
+      
+      // Layer 3: Validate token expiration if remember me was used
+      let isTokenValid = true;
+      if (hasStoredAuth) {
+        const expiration = localStorage.getItem('merchantAuthExpiration');
+        if (expiration) {
+          isTokenValid = new Date() < new Date(expiration);
+        }
+      }
+      
+      // Layer 4: Comprehensive auth status
+      const isFullyAuthenticated = (hasReactAuth || hasStoredAuth) && isTokenValid;
+      
+      console.log('🛡️ MerchantAuthGuard: Multi-layer auth check', {
+        hasReactAuth,
+        hasStoredAuth,
+        isTokenValid,
+        isFullyAuthenticated,
+        pathname,
+        isPublicRoute
+      });
+      
+      // If not authenticated and trying to access protected route
+      if (!isFullyAuthenticated && !isPublicRoute) {
+        const redirectUrl = encodeURIComponent(pathname);
+        console.log('🔒 MerchantAuthGuard: Redirecting to login, not authenticated for:', pathname);
+        redirectAttempted.current = true;
+        router.replace(`/merchant/login?redirect=${redirectUrl}`);
+        return;
+      }
 
-    // If authenticated but trying to access login/register, redirect to dashboard
-    if (isAuthenticated && user && isPublicRoute) {
-      console.log('✅ MerchantAuthGuard: Already authenticated, redirecting to dashboard from:', pathname);
-      router.push('/merchant');
-      return;
-    }
+      // If authenticated but trying to access login/register, redirect to dashboard
+      if (isFullyAuthenticated && isPublicRoute) {
+        console.log('✅ MerchantAuthGuard: Already authenticated, redirecting to dashboard from:', pathname);
+        redirectAttempted.current = true;
+        router.replace('/merchant');
+        return;
+      }
+    };
+
+    // Use shorter delay for faster response
+    const timeoutId = setTimeout(performAuthCheck, 100);
+
+    return () => clearTimeout(timeoutId);
   }, [isAuthenticated, user, pathname, router, isLoading, isPublicRoute]);
 
   // Show loading spinner while checking authentication
@@ -63,7 +108,7 @@ export const MerchantAuthGuard = ({ children }: MerchantAuthGuardProps) => {
   }
 
   // Allow access to public routes regardless of auth state
-  if (publicRoutes.includes(pathname)) {
+  if (isPublicRoute) {
     return <>{children}</>;
   }
 

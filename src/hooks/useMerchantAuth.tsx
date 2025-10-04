@@ -1,8 +1,58 @@
 'use client';
 
-import { useState, useEffect, useContext, createContext, ReactNode } from 'react';
+import { useState, useEffect, useContext, createContext, ReactNode, useMemo, useCallback, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+
+// Singleton auth state manager for persistence across component re-mounts
+class MerchantAuthStateManager {
+  private static instance: MerchantAuthStateManager;
+  private authState: {
+    user: any | null;
+    application: any | null;
+    token: string | null;
+    isInitialized: boolean;
+  } = {
+    user: null,
+    application: null,
+    token: null,
+    isInitialized: false,
+  };
+
+  private constructor() {}
+
+  static getInstance(): MerchantAuthStateManager {
+    if (!MerchantAuthStateManager.instance) {
+      MerchantAuthStateManager.instance = new MerchantAuthStateManager();
+    }
+    return MerchantAuthStateManager.instance;
+  }
+
+  getState() {
+    return { ...this.authState };
+  }
+
+  setState(newState: Partial<typeof this.authState>) {
+    this.authState = { ...this.authState, ...newState };
+    console.log('🔄 AuthStateManager: State updated', this.authState);
+  }
+
+  clearState() {
+    this.authState = {
+      user: null,
+      application: null,
+      token: null,
+      isInitialized: false,
+    };
+    console.log('🗑️ AuthStateManager: State cleared');
+  }
+
+  hasValidState(): boolean {
+    return !!(this.authState.user && this.authState.token && this.authState.isInitialized);
+  }
+}
+
+const authStateManager = MerchantAuthStateManager.getInstance();
 
 interface MerchantApplication {
   id: string;
@@ -57,27 +107,102 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+  const initializationAttempted = useRef(false);
+  const hmrCounter = useRef(0);
+  const lastAuthCheck = useRef(0);
   const router = useRouter();
 
+  // Hydration effect - runs once on mount
   useEffect(() => {
-    // Prevent multiple initializations
-    if (isInitialized) {
-      console.log('🔧 MerchantAuth: Already initialized, skipping...');
-      return;
-    }
+    setIsHydrated(true);
+  }, []);
 
-    const initializeMerchantAuth = async () => {
-      console.log('🔧 MerchantAuth: Starting initialization...');
+  // HMR detection and state preservation
+  useEffect(() => {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+      // Increment HMR counter
+      hmrCounter.current += 1;
       
-      try {
+      // If this is not the first mount, we're likely in HMR
+      if (hmrCounter.current > 1) {
+        console.log('🔄 MerchantAuth: HMR detected, preserving auth state...');
+        
+        // Force immediate state restoration from localStorage
         const storedToken = localStorage.getItem('merchantAuthToken');
         const storedUser = localStorage.getItem('merchantUser');
-        const rememberMe = localStorage.getItem('merchantRememberMe') === 'true';
+        
+        if (storedToken && storedUser) {
+          try {
+            const parsedUser = JSON.parse(storedUser);
+            const merchantApplication = {
+              id: 'app-123',
+              status: 'approved',
+              businessName: 'John\'s Beauty Salon',
+              businessType: 'salon',
+              businessEmail: 'merchant@beautify.com',
+              applicationDate: '2024-01-01T00:00:00.000Z',
+              verificationSteps: {
+                businessEmailVerified: true,
+                documentsUploaded: true,
+                bankDetailsProvided: true,
+                backgroundCheckPassed: true,
+              },
+            };
+            
+            // Immediately restore state without waiting for normal initialization
+            setToken(storedToken);
+            setUser(parsedUser);
+            setApplication(merchantApplication as MerchantApplication);
+            setIsInitialized(true);
+            setIsLoading(false);
+            
+            console.log('✅ MerchantAuth: HMR state restoration complete');
+          } catch (error) {
+            console.error('❌ MerchantAuth: HMR state restoration failed:', error);
+          }
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // Prevent multiple initializations and wait for hydration
+    if (initializationAttempted.current || !isHydrated) {
+      return;
+    }
+    
+    // StrictMode-safe initialization with timing check
+    const now = Date.now();
+    if (now - lastAuthCheck.current < 100) {
+      console.log('🔧 MerchantAuth: Skipping duplicate initialization (StrictMode)');
+      return;
+    }
+    lastAuthCheck.current = now;
+
+    const initializeMerchantAuth = () => {
+      console.log('🔧 MerchantAuth: Starting initialization...');
+      initializationAttempted.current = true;
+      
+      try {
+        // First check singleton state
+        const singletonState = authStateManager.getState();
+        if (authStateManager.hasValidState()) {
+          console.log('🔄 MerchantAuth: Restoring from singleton state');
+          setToken(singletonState.token);
+          setUser(singletonState.user);
+          setApplication(singletonState.application);
+          setIsInitialized(true);
+          setIsLoading(false);
+          return;
+        }
+        
+        const storedToken = localStorage.getItem('merchantAuthToken');
+        const storedUser = localStorage.getItem('merchantUser');
 
         console.log('🔧 MerchantAuth: Found stored data:', { 
           hasToken: !!storedToken, 
-          hasUser: !!storedUser, 
-          rememberMe 
+          hasUser: !!storedUser
         });
 
         if (storedToken && storedUser) {
@@ -100,36 +225,116 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
               },
             };
             
-            // Update all auth state synchronously in batch
+            // Update singleton state
+            authStateManager.setState({
+              token: storedToken,
+              user: parsedUser,
+              application: merchantApplication,
+              isInitialized: true,
+            });
+            
+            // Update all auth state synchronously in batch - IMMEDIATELY
             setToken(storedToken);
             setUser(parsedUser);
             setApplication(merchantApplication as MerchantApplication);
+            setIsInitialized(true);
+            setIsLoading(false);
             
             console.log('✅ MerchantAuth: Successfully restored auth state from localStorage');
           } catch (error) {
             console.error('❌ MerchantAuth: Error parsing stored user data:', error);
             // Clear corrupted data
+            authStateManager.clearState();
             localStorage.removeItem('merchantAuthToken');
             localStorage.removeItem('merchantUser');
             localStorage.removeItem('merchantRememberMe');
             localStorage.removeItem('merchantAuthExpiration');
+            setIsInitialized(true);
+            setIsLoading(false);
           }
         } else {
           console.log('📝 MerchantAuth: No stored authentication found');
+          authStateManager.clearState();
+          setIsInitialized(true);
+          setIsLoading(false);
         }
+        
+        console.log('🏁 MerchantAuth: Initialization complete');
       } catch (error) {
         console.error('❌ MerchantAuth: Initialization error:', error);
-      } finally {
+        authStateManager.clearState();
         setIsInitialized(true);
         setIsLoading(false);
-        console.log('🏁 MerchantAuth: Initialization complete');
       }
     };
 
+    // Execute immediately without timeout to prevent state loss during navigation
     initializeMerchantAuth();
-  }, [isInitialized]);
+  }, [isHydrated]);
 
-  const login = async (email: string, password: string, rememberMe: boolean = false): Promise<boolean> => {
+  // localStorage polling for immediate state availability
+  useEffect(() => {
+    if (!isHydrated || typeof window === 'undefined') {
+      return;
+    }
+
+    let pollInterval: NodeJS.Timeout;
+    
+    const pollStorageState = () => {
+      const currentToken = localStorage.getItem('merchantAuthToken');
+      const currentUser = localStorage.getItem('merchantUser');
+      
+      // If we have stored auth but no current state, restore immediately
+      if (currentToken && currentUser && !token && !user) {
+        try {
+          const parsedUser = JSON.parse(currentUser);
+          const merchantApplication = {
+            id: 'app-123',
+            status: 'approved',
+            businessName: 'John\'s Beauty Salon',
+            businessType: 'salon',
+            businessEmail: 'merchant@beautify.com',
+            applicationDate: '2024-01-01T00:00:00.000Z',
+            verificationSteps: {
+              businessEmailVerified: true,
+              documentsUploaded: true,
+              bankDetailsProvided: true,
+              backgroundCheckPassed: true,
+            },
+          };
+          
+          console.log('📡 MerchantAuth: Polling detected auth state, restoring...');
+          setToken(currentToken);
+          setUser(parsedUser);
+          setApplication(merchantApplication as MerchantApplication);
+          setIsInitialized(true);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('❌ MerchantAuth: Polling restoration failed:', error);
+        }
+      }
+      
+      // If localStorage is cleared but we have state, clear state
+      if ((!currentToken || !currentUser) && (token || user)) {
+        console.log('📡 MerchantAuth: Polling detected auth cleared, clearing state...');
+        setToken(null);
+        setUser(null);
+        setApplication(null);
+        setIsInitialized(false);
+      }
+    };
+    
+    // Poll every 100ms for immediate responsiveness
+    pollInterval = setInterval(pollStorageState, 100);
+    
+    return () => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+      }
+    };
+  }, [isHydrated, token, user]);
+
+  const login = useCallback(async (email: string, password: string, rememberMe: boolean = false): Promise<boolean> => {
     try {
       setIsLoading(true);
       console.log('🔐 Starting merchant login process...', { email, rememberMe });
@@ -186,6 +391,14 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem('merchantRememberMe', rememberMe.toString());
         console.log('💾 Auth data stored in localStorage');
         
+        // Update singleton state
+        authStateManager.setState({
+          token: newToken,
+          user: newUser,
+          application: merchantApplication,
+          isInitialized: true,
+        });
+        
         // Update state in batch to prevent flickers
         setToken(newToken);
         setUser(newUser);
@@ -207,7 +420,7 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       console.log('🔄 Login process completed, loading state reset');
     }
-  };
+  }, [router]);
 
   const register = async (merchantData: any): Promise<boolean> => {
     try {
@@ -316,13 +529,21 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     console.log('🚪 MerchantAuth: Logging out...');
     
-    // Clear state first
+    // Clear singleton state first
+    authStateManager.clearState();
+    
+    // Clear React state
     setUser(null);
     setApplication(null);
     setToken(null);
+    setIsInitialized(false);
+    setIsLoading(false);
+    
+    // Reset initialization flag
+    initializationAttempted.current = false;
     
     // Clear localStorage
     localStorage.removeItem('merchantAuthToken');
@@ -333,9 +554,9 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
     console.log('✅ MerchantAuth: Logout complete, state and localStorage cleared');
     toast.success('Logged out successfully');
     router.push('/merchant/login');
-  };
+  }, [router]);
 
-  const value: MerchantAuthContextType = {
+  const value: MerchantAuthContextType = useMemo(() => ({
     user,
     application,
     token,
@@ -350,7 +571,7 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
     updateApplication,
     requestPasswordReset,
     resetPassword,
-  };
+  }), [user, application, token, isLoading, login, logout]);
 
   return (
     <MerchantAuthContext.Provider value={value}>
