@@ -72,9 +72,9 @@ const navigation = [
     name: 'Financial',
     icon: CreditCard,
     children: [
-      { name: 'Payments', href: '/admin/payments', icon: CreditCard },
-      { name: 'Transactions', href: '/admin/transactions', icon: Database },
-      { name: 'Revenue Analytics', href: '/admin/revenue', icon: TrendingUp },
+      { name: 'Payments', href: '/admin/financials/payments', icon: CreditCard },
+      { name: 'Transactions', href: '/admin/financials/transactions', icon: Database },
+      { name: 'Revenue Analytics', href: '/admin/financials/revenue-analytics', icon: TrendingUp },
     ],
   },
   {

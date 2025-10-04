@@ -102,6 +102,7 @@ interface AnalyticsData {
 export default function AnalyticsPage() {
   const { user } = useSelector((state: RootState) => state.auth);
   const [timeframe, setTimeframe] = useState('30d');
+  const [chartView, setChartView] = useState<'revenue' | 'bookings'>('revenue');
   const [analytics, setAnalytics] = useState<AnalyticsData>({
     overview: {
       totalRevenue: 0,
@@ -384,24 +385,203 @@ export default function AnalyticsPage() {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-slate-900">Revenue Trends</h2>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
+              <Button 
+                variant={chartView === 'revenue' ? 'outline' : 'ghost'} 
+                size="sm"
+                onClick={() => setChartView('revenue')}
+              >
                 <LineChart className="w-4 h-4 mr-2" />
                 Revenue
               </Button>
-              <Button variant="ghost" size="sm">
+              <Button 
+                variant={chartView === 'bookings' ? 'outline' : 'ghost'} 
+                size="sm"
+                onClick={() => setChartView('bookings')}
+              >
                 <BarChart3 className="w-4 h-4 mr-2" />
                 Bookings
               </Button>
             </div>
           </div>
           
-          {/* Simplified chart representation */}
-          <div className="h-80 bg-gradient-to-r from-slate-50 to-slate-100 rounded-lg flex items-center justify-center">
-            <div className="text-center">
-              <LineChart className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-              <p className="text-slate-600">Revenue Chart Visualization</p>
-              <p className="text-sm text-slate-500 mt-2">
-                Monthly revenue: {formatCurrency(analytics.revenueByMonth[analytics.revenueByMonth.length - 1]?.revenue || 0)}
+          {/* Interactive Chart */}
+          <div className="h-80 relative">
+            {chartView === 'revenue' ? (
+              /* Revenue Line Chart */
+              <svg className="w-full h-full" viewBox="0 0 800 320" preserveAspectRatio="none">
+                {/* Grid Lines */}
+                <defs>
+                  <pattern id="grid" width="66.67" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 66.67 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" strokeWidth="1"/>
+                  </pattern>
+                  <linearGradient id="revenueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#ec4899" stopOpacity="0.3"/>
+                    <stop offset="100%" stopColor="#ec4899" stopOpacity="0.05"/>
+                  </linearGradient>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+                
+                {analytics.revenueByMonth.length > 0 && (
+                  <>
+                    {/* Revenue Area */}
+                    <path
+                      d={analytics.revenueByMonth.map((point, index) => {
+                        const x = (index / (analytics.revenueByMonth.length - 1)) * 800;
+                        const maxRevenue = Math.max(...analytics.revenueByMonth.map(p => p.revenue));
+                        const y = 320 - ((point.revenue / maxRevenue) * 280) - 20;
+                        return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                      }).join(' ') + ' L 800 320 L 0 320 Z'}
+                      fill="url(#revenueGradient)"
+                    />
+                    
+                    {/* Revenue Line */}
+                    <path
+                      d={analytics.revenueByMonth.map((point, index) => {
+                        const x = (index / (analytics.revenueByMonth.length - 1)) * 800;
+                        const maxRevenue = Math.max(...analytics.revenueByMonth.map(p => p.revenue));
+                        const y = 320 - ((point.revenue / maxRevenue) * 280) - 20;
+                        return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+                      }).join(' ')}
+                      fill="none"
+                      stroke="#ec4899"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    
+                    {/* Data Points */}
+                    {analytics.revenueByMonth.map((point, index) => {
+                      const x = (index / (analytics.revenueByMonth.length - 1)) * 800;
+                      const maxRevenue = Math.max(...analytics.revenueByMonth.map(p => p.revenue));
+                      const y = 320 - ((point.revenue / maxRevenue) * 280) - 20;
+                      return (
+                        <g key={`revenue-point-${index}`}>
+                          <circle
+                            cx={x}
+                            cy={y}
+                            r="6"
+                            fill="#ec4899"
+                            stroke="#fff"
+                            strokeWidth="3"
+                            className="hover:r-8 transition-all cursor-pointer drop-shadow-lg"
+                          />
+                          <text
+                            x={x}
+                            y={y - 15}
+                            textAnchor="middle"
+                            className="text-xs font-medium fill-slate-700 opacity-0 hover:opacity-100 transition-opacity"
+                          >
+                            {formatCurrency(point.revenue)}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </>
+                )}
+              </svg>
+            ) : (
+              /* Bookings Bar Chart */
+              <svg className="w-full h-full" viewBox="0 0 800 320" preserveAspectRatio="none">
+                <defs>
+                  <pattern id="grid" width="66.67" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 66.67 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" strokeWidth="1"/>
+                  </pattern>
+                  <linearGradient id="bookingsGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8"/>
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.3"/>
+                  </linearGradient>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+                
+                {analytics.revenueByMonth.length > 0 && (
+                  <>
+                    {/* Booking Bars */}
+                    {analytics.revenueByMonth.map((point, index) => {
+                      const barWidth = 800 / analytics.revenueByMonth.length * 0.6;
+                      const x = (index / (analytics.revenueByMonth.length - 1)) * 800 - barWidth / 2;
+                      const maxBookings = Math.max(...analytics.revenueByMonth.map(p => p.bookings));
+                      const barHeight = (point.bookings / maxBookings) * 280;
+                      const y = 320 - barHeight - 20;
+                      
+                      return (
+                        <g key={`booking-bar-${index}`}>
+                          <rect
+                            x={x}
+                            y={y}
+                            width={barWidth}
+                            height={barHeight}
+                            fill="url(#bookingsGradient)"
+                            stroke="#3b82f6"
+                            strokeWidth="1"
+                            rx="4"
+                            className="hover:opacity-80 transition-opacity cursor-pointer"
+                          />
+                          <text
+                            x={x + barWidth / 2}
+                            y={y - 5}
+                            textAnchor="middle"
+                            className="text-xs font-medium fill-slate-700"
+                          >
+                            {point.bookings}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </>
+                )}
+              </svg>
+            )}
+            
+            {/* X-axis labels */}
+            <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-slate-500 mt-2 px-4">
+              {analytics.revenueByMonth.map((point, index) => (
+                <span key={index} className="text-center">
+                  {point.month}
+                </span>
+              ))}
+            </div>
+            
+            {/* Y-axis labels */}
+            <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-slate-500 -ml-16 py-4">
+              {chartView === 'revenue' ? (
+                <>
+                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)))}</span>
+                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)) * 0.75)}</span>
+                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)) * 0.5)}</span>
+                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)) * 0.25)}</span>
+                  <span>$0</span>
+                </>
+              ) : (
+                <>
+                  <span>{Math.max(...analytics.revenueByMonth.map(p => p.bookings))}</span>
+                  <span>{Math.round(Math.max(...analytics.revenueByMonth.map(p => p.bookings)) * 0.75)}</span>
+                  <span>{Math.round(Math.max(...analytics.revenueByMonth.map(p => p.bookings)) * 0.5)}</span>
+                  <span>{Math.round(Math.max(...analytics.revenueByMonth.map(p => p.bookings)) * 0.25)}</span>
+                  <span>0</span>
+                </>
+              )}
+            </div>
+          </div>
+          
+          {/* Chart Legend and Summary */}
+          <div className="flex items-center justify-between mt-6">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center">
+                <div className={cn("w-4 h-0.5 mr-2", chartView === 'revenue' ? 'bg-pink-500' : 'bg-blue-500')}></div>
+                <span className="text-sm text-slate-600">
+                  {chartView === 'revenue' ? 'Monthly Revenue' : 'Monthly Bookings'}
+                </span>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-slate-600">
+                {chartView === 'revenue' ? 'Total for Period' : 'Total Bookings'}
+              </p>
+              <p className="text-lg font-semibold text-slate-900">
+                {chartView === 'revenue' 
+                  ? formatCurrency(analytics.revenueByMonth.reduce((sum, item) => sum + item.revenue, 0))
+                  : analytics.revenueByMonth.reduce((sum, item) => sum + item.bookings, 0).toLocaleString()
+                }
               </p>
             </div>
           </div>

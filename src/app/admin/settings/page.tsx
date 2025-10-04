@@ -198,7 +198,7 @@ export default function AdminSettingsPage() {
       onClick={onChange}
       className={cn(
         'relative inline-flex items-center h-6 rounded-full w-11 transition-colors',
-        enabled ? 'bg-primary-600' : 'bg-gray-200'
+        enabled ? 'bg-blue-600' : 'bg-gray-200'
       )}
     >
       <span
@@ -212,20 +212,22 @@ export default function AdminSettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Platform Settings</h1>
-            <p className="text-gray-600 mt-1">Configure system-wide settings and preferences</p>
+      <AdminLayout>
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Platform Settings</h1>
+              <p className="text-gray-600 mt-1">Configure system-wide settings and preferences</p>
+            </div>
+          </div>
+          <div className="flex items-center justify-center py-12">
+            <div className="flex flex-col items-center">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
+              <p className="text-gray-600">Loading settings...</p>
+            </div>
           </div>
         </div>
-        <div className="flex items-center justify-center py-12">
-          <div className="flex flex-col items-center">
-            <Loader2 className="w-8 h-8 animate-spin text-primary-500 mb-4" />
-            <p className="text-gray-600">Loading settings...</p>
-          </div>
-        </div>
-      </div>
+      </AdminLayout>
     );
   }
 
@@ -242,7 +244,7 @@ export default function AdminSettingsPage() {
           <Button
             onClick={handleSave}
             disabled={!hasChanges || isSaving}
-            className="bg-primary-600 hover:bg-primary-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
           >
             {isSaving ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -312,7 +314,7 @@ export default function AdminSettingsPage() {
                       type="text"
                       value={settings.general.siteName}
                       onChange={(e) => handleSettingsChange('general', 'siteName', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
@@ -324,7 +326,7 @@ export default function AdminSettingsPage() {
                       type="text"
                       value={settings.general.siteDescription}
                       onChange={(e) => handleSettingsChange('general', 'siteDescription', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
@@ -394,7 +396,7 @@ export default function AdminSettingsPage() {
                         type="number"
                         value={settings.payments.platformFeePercentage}
                         onChange={(e) => handleSettingsChange('payments', 'platformFeePercentage', Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         min="0"
                         max="30"
                         step="0.1"
@@ -413,7 +415,7 @@ export default function AdminSettingsPage() {
                         type="number"
                         value={settings.payments.minimumPayoutAmount}
                         onChange={(e) => handleSettingsChange('payments', 'minimumPayoutAmount', Number(e.target.value))}
-                        className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         min="1"
                       />
                     </div>
@@ -426,7 +428,7 @@ export default function AdminSettingsPage() {
                     <select
                       value={settings.payments.payoutSchedule}
                       onChange={(e) => handleSettingsChange('payments', 'payoutSchedule', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
                       <option value="daily">Daily</option>
                       <option value="weekly">Weekly</option>
@@ -442,7 +444,7 @@ export default function AdminSettingsPage() {
                       type="text"
                       value={settings.payments.stripePublishableKey}
                       onChange={(e) => handleSettingsChange('payments', 'stripePublishableKey', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="pk_test_..."
                     />
                   </div>
@@ -466,7 +468,7 @@ export default function AdminSettingsPage() {
                       type="number"
                       value={settings.security.passwordMinLength}
                       onChange={(e) => handleSettingsChange('security', 'passwordMinLength', Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       min="6"
                       max="20"
                     />
@@ -480,7 +482,7 @@ export default function AdminSettingsPage() {
                       type="number"
                       value={settings.security.sessionTimeout}
                       onChange={(e) => handleSettingsChange('security', 'sessionTimeout', Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       min="5"
                       max="120"
                     />
@@ -494,7 +496,7 @@ export default function AdminSettingsPage() {
                       type="number"
                       value={settings.security.maxLoginAttempts}
                       onChange={(e) => handleSettingsChange('security', 'maxLoginAttempts', Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       min="3"
                       max="10"
                     />
@@ -546,7 +548,7 @@ export default function AdminSettingsPage() {
                       type="text"
                       value={settings.communications.smtpHost}
                       onChange={(e) => handleSettingsChange('communications', 'smtpHost', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       placeholder="smtp.gmail.com"
                     />
                   </div>
@@ -559,7 +561,7 @@ export default function AdminSettingsPage() {
                       type="number"
                       value={settings.communications.smtpPort}
                       onChange={(e) => handleSettingsChange('communications', 'smtpPort', Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
@@ -571,7 +573,7 @@ export default function AdminSettingsPage() {
                       type="email"
                       value={settings.communications.fromEmail}
                       onChange={(e) => handleSettingsChange('communications', 'fromEmail', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
@@ -583,7 +585,7 @@ export default function AdminSettingsPage() {
                       type="text"
                       value={settings.communications.fromName}
                       onChange={(e) => handleSettingsChange('communications', 'fromName', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
