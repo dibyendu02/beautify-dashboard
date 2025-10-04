@@ -380,7 +380,7 @@ export default function MerchantAnalytics() {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ segment, customers }) => `${segment}: ${customers}`}
+                        label={({ segment, customers }: any) => `${segment}: ${customers}`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="customers"
