@@ -813,7 +813,7 @@ export default function EnhancedServiceAnalytics() {
                             outerRadius={60}
                             fill="#8884d8"
                             dataKey="count"
-                            label={({ tier, count }) => `${tier}: ${count}`}
+                            label={({ tier, count }: any) => `${tier}: ${count}`}
                           >
                             {selectedService.demographics.loyaltyTiers.map((entry, index) => (
                               <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
