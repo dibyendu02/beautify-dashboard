@@ -12,6 +12,7 @@ import {
   Check,
   Settings,
   Edit3,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
@@ -219,6 +220,24 @@ export default function ServiceAvailabilityPage() {
     setHasChanges(false);
   };
 
+  const cancelChanges = () => {
+    // Reset availability to initial state
+    const initialAvailability: AvailabilitySchedule = {};
+    services.forEach(service => {
+      initialAvailability[service._id] = {};
+      DAYS_OF_WEEK.forEach(day => {
+        if (day.value >= 1 && day.value <= 5) { // Monday to Friday
+          initialAvailability[service._id][day.value] = [...DEFAULT_TIME_SLOTS];
+        } else {
+          initialAvailability[service._id][day.value] = [];
+        }
+      });
+    });
+    setAvailability(initialAvailability);
+    setHasChanges(false);
+    toast.success('Changes discarded');
+  };
+
 
   const removeService = (serviceId: string) => {
     if (services.length <= 1) {
@@ -263,9 +282,19 @@ export default function ServiceAvailabilityPage() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Service Availability</h1>
-          <p className="text-gray-600 mt-1">Configure when your services are available for booking</p>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => router.push('/merchant/services')}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Service Availability</h1>
+            <p className="text-gray-600 mt-1">Configure when your services are available for booking</p>
+          </div>
         </div>
         <div className="flex items-center space-x-3">
           <Button
@@ -275,10 +304,20 @@ export default function ServiceAvailabilityPage() {
             <Plus className="w-4 h-4 mr-2" />
             Add Service
           </Button>
+          {hasChanges && (
+            <Button
+              onClick={cancelChanges}
+              variant="outline"
+              className="border-gray-300 text-gray-700 hover:bg-gray-100"
+            >
+              <X className="w-4 h-4 mr-2" />
+              Cancel
+            </Button>
+          )}
           <Button
             onClick={saveAvailability}
             disabled={!hasChanges}
-            className="bg-blue-500 hover:bg-blue-600 text-white border-0 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="!bg-blue-500 hover:!bg-blue-600 !text-white border-0 disabled:!bg-gray-400 disabled:cursor-not-allowed"
           >
             <Save className="w-4 h-4 mr-2" />
             Save Changes
@@ -377,9 +416,10 @@ export default function ServiceAvailabilityPage() {
                     <div className="flex items-center space-x-2">
                       <Button
                         onClick={() => copyToAllDays(day.value)}
-                        className="bg-gray-500 hover:bg-gray-600 text-white border-0 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        variant="outline"
                         size="sm"
                         disabled={!currentAvailability[day.value]?.length}
+                        className="border-gray-300 text-gray-700 hover:bg-gray-100 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200"
                       >
                         Copy to All Days
                       </Button>

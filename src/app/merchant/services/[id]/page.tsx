@@ -1,10 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useRouter } from 'next/navigation';
-import { RootState, AppDispatch } from '@/store';
-import { fetchServiceById, deleteService, clearCurrentService } from '@/store/slices/serviceSlice';
 import {
   ArrowLeft,
   Edit,
@@ -19,34 +16,176 @@ import {
   Eye,
   Share2,
   MoreVertical,
+  Scissors,
 } from 'lucide-react';
 import { cn, formatCurrency, formatDate } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
+
+interface Service {
+  _id: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  duration: number;
+  averageRating?: number;
+  totalBookings?: number;
+  isActive: boolean;
+  images: string[];
+  features?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// Demo services data - Same as main Services page
+const DEMO_SERVICES: Service[] = [
+  {
+    _id: '1',
+    name: 'Classic Facial Treatment',
+    description: 'Deep cleansing facial with extractions, mask, and moisturizing treatment for all skin types. Our expert estheticians use premium products to cleanse, exfoliate, and hydrate your skin, leaving it refreshed and glowing.',
+    category: 'Facial Treatments',
+    price: 120,
+    duration: 60,
+    averageRating: 4.8,
+    totalBookings: 156,
+    isActive: true,
+    images: ['/images/facial-classic.jpg'],
+    features: ['Deep Cleansing', 'Exfoliation', 'Face Mask', 'Moisturizing'],
+    createdAt: '2024-01-15T10:00:00Z',
+    updatedAt: '2024-01-20T14:30:00Z',
+  },
+  {
+    _id: '2',
+    name: 'Deep Tissue Massage',
+    description: 'Therapeutic massage targeting deep muscle layers to relieve tension and chronic pain. Perfect for athletes and those with muscle tension. Our skilled therapists use firm pressure techniques to release knots and restore mobility.',
+    category: 'Massage Therapy',
+    price: 150,
+    duration: 90,
+    averageRating: 4.9,
+    totalBookings: 203,
+    isActive: true,
+    images: ['/images/massage-deep.jpg'],
+    features: ['Muscle Relief', 'Stress Reduction', 'Improved Circulation', 'Pain Management'],
+    createdAt: '2024-01-10T09:00:00Z',
+    updatedAt: '2024-01-22T11:15:00Z',
+  },
+  {
+    _id: '3',
+    name: 'Gel Manicure & Pedicure',
+    description: 'Long-lasting gel polish application with nail care and cuticle treatment. Includes nail shaping, cuticle care, hand and foot massage, and your choice of gel color that lasts up to 3 weeks without chipping.',
+    category: 'Nail Care',
+    price: 85,
+    duration: 120,
+    averageRating: 4.7,
+    totalBookings: 312,
+    isActive: true,
+    images: ['/images/nails-gel.jpg'],
+    features: ['Long-lasting Polish', 'Cuticle Care', 'Hand Massage', 'Nail Art Options'],
+    createdAt: '2024-01-05T08:00:00Z',
+    updatedAt: '2024-01-25T16:45:00Z',
+  },
+  {
+    _id: '4',
+    name: 'Eyebrow Threading & Tinting',
+    description: 'Precision eyebrow shaping with threading technique and professional tinting service. Our threading experts create the perfect arch for your face shape, followed by semi-permanent tinting for fuller-looking brows.',
+    category: 'Eyebrow & Lash',
+    price: 65,
+    duration: 45,
+    averageRating: 4.6,
+    totalBookings: 87,
+    isActive: true,
+    images: ['/images/eyebrow-threading.jpg'],
+    features: ['Precision Shaping', 'Gentle Threading', 'Custom Tinting', 'Brow Consultation'],
+    createdAt: '2024-01-08T11:00:00Z',
+    updatedAt: '2024-01-23T13:20:00Z',
+  },
+  {
+    _id: '5',
+    name: 'Hydrafacial Treatment',
+    description: 'Advanced hydradermabrasion treatment for instant skin rejuvenation and hydration. This multi-step treatment cleanses, extracts, and hydrates the skin using patented technology for immediate, noticeable results.',
+    category: 'Facial Treatments',
+    price: 180,
+    duration: 75,
+    averageRating: 4.9,
+    totalBookings: 94,
+    isActive: true,
+    images: ['/images/hydrafacial.jpg'],
+    features: ['Deep Hydration', 'Pore Extraction', 'Anti-Aging Serums', 'Instant Glow'],
+    createdAt: '2024-01-12T14:00:00Z',
+    updatedAt: '2024-01-24T10:30:00Z',
+  },
+  {
+    _id: '6',
+    name: 'Hair Cut & Style',
+    description: 'Professional haircut with wash, styling, and finishing touches. Our experienced stylists will consult with you to create the perfect cut that complements your features and lifestyle.',
+    category: 'Hair Services',
+    price: 95,
+    duration: 90,
+    averageRating: 4.4,
+    totalBookings: 145,
+    isActive: true,
+    images: ['/images/hair-cut.jpg'],
+    features: ['Consultation', 'Precision Cut', 'Blow Dry', 'Styling Products'],
+    createdAt: '2024-01-03T09:30:00Z',
+    updatedAt: '2024-01-21T15:00:00Z',
+  },
+  {
+    _id: '7',
+    name: 'Hot Stone Massage',
+    description: 'Relaxing massage using heated volcanic stones to melt away tension. The warmth of the stones penetrates deep into muscles, promoting relaxation and easing muscle stiffness.',
+    category: 'Massage Therapy',
+    price: 175,
+    duration: 75,
+    averageRating: 4.8,
+    totalBookings: 76,
+    isActive: false,
+    images: ['/images/hot-stone.jpg'],
+    features: ['Heated Stones', 'Deep Relaxation', 'Muscle Relief', 'Aromatherapy'],
+    createdAt: '2024-01-07T10:00:00Z',
+    updatedAt: '2024-01-19T12:45:00Z',
+  },
+  {
+    _id: '8',
+    name: 'Acrylic Nail Extensions',
+    description: 'Full set of acrylic nail extensions with custom length and shape. Choose from various shapes including coffin, almond, stiletto, or square, with endless color and design options.',
+    category: 'Nail Care',
+    price: 110,
+    duration: 150,
+    averageRating: 4.5,
+    totalBookings: 189,
+    isActive: true,
+    images: ['/images/acrylic-nails.jpg'],
+    features: ['Custom Length', 'Shape Options', 'Nail Art', 'Durable Finish'],
+    createdAt: '2024-01-06T13:00:00Z',
+    updatedAt: '2024-01-26T09:15:00Z',
+  },
+];
 
 export default function ServiceDetailsPage() {
   const params = useParams();
   const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const { currentService, isLoading } = useSelector((state: RootState) => state.service);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [service, setService] = useState<Service | null>(null);
 
   const serviceId = params.id as string;
 
   useEffect(() => {
-    if (serviceId) {
-      dispatch(fetchServiceById(serviceId));
-    }
-
-    return () => {
-      dispatch(clearCurrentService());
-    };
-  }, [serviceId, dispatch]);
+    // Simulate loading and find service from demo data
+    setIsLoading(true);
+    setTimeout(() => {
+      const foundService = DEMO_SERVICES.find(s => s._id === serviceId);
+      setService(foundService || null);
+      setIsLoading(false);
+    }, 500);
+  }, [serviceId]);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
-      await dispatch(deleteService(serviceId));
+      toast.success('Service deleted successfully');
       router.push('/merchant/services');
     }
   };
@@ -57,21 +196,21 @@ export default function ServiceDetailsPage() {
       customerName: 'Sarah Johnson',
       date: '2024-01-20T14:00:00Z',
       status: 'confirmed',
-      amount: 89.50,
+      amount: service?.price || 89.50,
     },
     {
       id: '2',
       customerName: 'Emma Wilson',
       date: '2024-01-18T10:00:00Z',
       status: 'completed',
-      amount: 89.50,
+      amount: service?.price || 89.50,
     },
     {
       id: '3',
       customerName: 'Lisa Anderson',
       date: '2024-01-15T16:30:00Z',
       status: 'completed',
-      amount: 89.50,
+      amount: service?.price || 89.50,
     },
   ];
 
@@ -88,17 +227,17 @@ export default function ServiceDetailsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
 
-  if (!currentService) {
+  if (!service) {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold text-gray-900 mb-2">Service not found</h2>
         <p className="text-gray-600 mb-4">The service you're looking for doesn't exist.</p>
-        <Button onClick={() => router.push('/merchant/services')}>
+        <Button onClick={() => router.push('/merchant/services')} className="bg-blue-500 hover:bg-blue-600 text-white">
           Back to Services
         </Button>
       </div>
@@ -110,16 +249,14 @@ export default function ServiceDetailsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.back()}
-            className="p-2"
+          <button
+            onClick={() => router.push('/merchant/services')}
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+            <ArrowLeft className="w-5 h-5 text-gray-600" />
+          </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{currentService.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{service.name}</h1>
             <p className="text-gray-600 mt-1">Service details and analytics</p>
           </div>
         </div>
@@ -161,41 +298,33 @@ export default function ServiceDetailsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Service Images */}
-          {currentService.images && currentService.images.length > 0 && (
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Service Images</h2>
-              <div className="space-y-4">
-                <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                  <img
-                    src={currentService.images[selectedImage]}
-                    alt={currentService.title}
-                    className="w-full h-full object-cover"
-                  />
+          {/* Service Image Card */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center space-x-4">
+              <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-blue-100 rounded-xl flex items-center justify-center">
+                <Scissors className="w-10 h-10 text-pink-500" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2 mb-2">
+                  <h2 className="text-xl font-semibold text-gray-900">{service.name}</h2>
+                  <span
+                    className={cn(
+                      'px-2 py-1 rounded-full text-xs font-medium',
+                      service.isActive
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    )}
+                  >
+                    {service.isActive ? 'Active' : 'Inactive'}
+                  </span>
                 </div>
-                {currentService.images.length > 1 && (
-                  <div className="flex space-x-2 overflow-x-auto pb-2">
-                    {currentService.images.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setSelectedImage(index)}
-                        className={cn(
-                          'flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors',
-                          selectedImage === index ? 'border-primary-500' : 'border-gray-200'
-                        )}
-                      >
-                        <img
-                          src={image}
-                          alt={`${currentService.title} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
+                <span className="inline-flex items-center bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">
+                  <Tag className="w-3 h-3 mr-1" />
+                  {service.category}
+                </span>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Service Details */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
@@ -203,40 +332,17 @@ export default function ServiceDetailsPage() {
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
-                <p className="text-gray-900">{currentService.description}</p>
+                <p className="text-gray-900">{service.description}</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Category</h3>
-                  <span className="inline-flex items-center bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded-full">
-                    <Tag className="w-3 h-3 mr-1" />
-                    {currentService.category}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Status</h3>
-                  <span
-                    className={cn(
-                      'inline-flex items-center text-sm px-3 py-1 rounded-full font-medium',
-                      currentService.isActive
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                    )}
-                  >
-                    {currentService.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-              </div>
-
-              {currentService.tags && currentService.tags.length > 0 && (
+              {service.features && service.features.length > 0 && (
                 <div>
                   <h3 className="text-sm font-medium text-gray-700 mb-2">Features</h3>
                   <div className="flex flex-wrap gap-2">
-                    {currentService.tags.map((feature, index) => (
+                    {service.features.map((feature, index) => (
                       <span
                         key={index}
-                        className="inline-flex items-center bg-primary-100 text-primary-800 text-sm px-3 py-1 rounded-full"
+                        className="inline-flex items-center bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
                       >
                         {feature}
                       </span>
@@ -255,7 +361,7 @@ export default function ServiceDetailsPage() {
                 <Button variant="ghost" size="sm">View All</Button>
               </Link>
             </div>
-            
+
             {mockBookings.length === 0 ? (
               <div className="text-center py-8">
                 <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -304,7 +410,7 @@ export default function ServiceDetailsPage() {
                   <span className="text-sm text-gray-600">Price</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-900">
-                  {formatCurrency(currentService.price)}
+                  {formatCurrency(service.price)}
                 </span>
               </div>
 
@@ -314,7 +420,7 @@ export default function ServiceDetailsPage() {
                   <span className="text-sm text-gray-600">Duration</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-900">
-                  {currentService.duration} min
+                  {service.duration} min
                 </span>
               </div>
 
@@ -324,7 +430,7 @@ export default function ServiceDetailsPage() {
                   <span className="text-sm text-gray-600">Rating</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-900">
-                  {currentService.averageRating ? currentService.averageRating.toFixed(1) : 'N/A'}
+                  {service.averageRating ? service.averageRating.toFixed(1) : 'N/A'}
                 </span>
               </div>
 
@@ -334,7 +440,7 @@ export default function ServiceDetailsPage() {
                   <span className="text-sm text-gray-600">Total Bookings</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-900">
-                  {currentService.totalBookings || 0}
+                  {service.totalBookings || 0}
                 </span>
               </div>
 
@@ -344,7 +450,7 @@ export default function ServiceDetailsPage() {
                   <span className="text-sm text-gray-600">Views</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-900">
-                  0
+                  {Math.floor(Math.random() * 500) + 100}
                 </span>
               </div>
             </div>
@@ -353,20 +459,20 @@ export default function ServiceDetailsPage() {
           {/* Quick Actions */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-            <div className="space-y-3">
-              <Link href={`/merchant/services/${serviceId}/edit`}>
+            <div className="flex flex-col gap-3">
+              <Link href={`/merchant/services/${serviceId}/edit`} className="block">
                 <Button variant="outline" className="w-full justify-start">
                   <Edit className="w-4 h-4 mr-2" />
                   Edit Service
                 </Button>
               </Link>
-              <Link href={`/merchant/bookings/new?service=${serviceId}`}>
+              <Link href={`/merchant/bookings/new?service=${serviceId}`} className="block">
                 <Button variant="outline" className="w-full justify-start">
                   <Calendar className="w-4 h-4 mr-2" />
                   Create Booking
                 </Button>
               </Link>
-              <Link href={`/merchant/analytics?service=${serviceId}`}>
+              <Link href={`/merchant/services/analytics`} className="block">
                 <Button variant="outline" className="w-full justify-start">
                   <TrendingUp className="w-4 h-4 mr-2" />
                   View Analytics
@@ -382,19 +488,19 @@ export default function ServiceDetailsPage() {
               <div className="flex justify-between">
                 <span className="text-gray-600">Created:</span>
                 <span className="font-medium">
-                  {formatDate(currentService.createdAt || new Date())}
+                  {formatDate(service.createdAt || new Date().toISOString())}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Last Updated:</span>
                 <span className="font-medium">
-                  {formatDate(currentService.updatedAt || new Date())}
+                  {formatDate(service.updatedAt || new Date().toISOString())}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Service ID:</span>
                 <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
-                  {currentService.id}
+                  {service._id}
                 </span>
               </div>
             </div>

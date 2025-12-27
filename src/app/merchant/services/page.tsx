@@ -617,10 +617,8 @@ export default function ServicesPage() {
               {/* Service Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-secondary-100 rounded-full flex items-center justify-center">
-                    <div className="text-primary-600">
-                      <Scissors className="w-6 h-6" />
-                    </div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-pink-100 to-blue-100 rounded-xl flex items-center justify-center">
+                    <Scissors className="w-6 h-6 text-pink-500" />
                   </div>
                   <div className="ml-3">
                     <h3 className="text-lg font-semibold text-gray-900">
