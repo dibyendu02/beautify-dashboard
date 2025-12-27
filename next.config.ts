@@ -4,14 +4,10 @@ const nextConfig: NextConfig = {
   // Production optimizations
   poweredByHeader: false, // Remove X-Powered-By header
 
-  // TypeScript and ESLint configuration
+  // TypeScript configuration
   typescript: {
     // In development, allow build despite errors for faster development
     ignoreBuildErrors: process.env.NODE_ENV === 'development',
-  },
-  eslint: {
-    // Ignore ESLint warnings during builds to allow deployment
-    ignoreDuringBuilds: true,
   },
 
   // Environment variables
@@ -23,18 +19,33 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
-    domains: [
-      'localhost',
-      'beautify-api.com',
-      'res.cloudinary.com',
-      'images.unsplash.com',
-      'picsum.photos'
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'beautify-api.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60 * 60 * 24 * 7, // 1 week
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    
+
     // Image optimization for performance
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -178,7 +189,7 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
-    
+
     // Enable styled-components SSR
     styledComponents: true,
   },
@@ -193,15 +204,10 @@ const nextConfig: NextConfig = {
     return null; // Use default
   },
 
-  // Custom server configuration
-  serverRuntimeConfig: {
-    // Server-only configuration
-    mySecret: process.env.SECRET_KEY,
-  },
-
-  publicRuntimeConfig: {
-    // Available on both server and client
-    apiUrl: process.env.NEXT_PUBLIC_API_URL,
+  // Turbopack configuration (Next.js 16+)
+  turbopack: {
+    // Empty config to silence webpack warning
+    // Most applications work fine under Turbopack with no configuration
   },
 
   // Rewrites for API proxy (development)
