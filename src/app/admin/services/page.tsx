@@ -575,18 +575,21 @@ export default function AdminServicesPage() {
             </table>
           </div>
 
-          <div className="px-6 py-4 border-t border-gray-200">
-            <Pagination
-              currentPage={currentPage}
-              totalItems={filteredServices.length}
-              itemsPerPage={itemsPerPage}
-              onPageChange={setCurrentPage}
-              onItemsPerPageChange={(newItemsPerPage) => {
-                setItemsPerPage(newItemsPerPage);
-                setCurrentPage(1);
-              }}
-            />
-          </div>
+          {/* Pagination - only show when there's more than one page */}
+          {filteredServices.length > itemsPerPage && (
+            <div className="px-6 py-4 border-t border-gray-200">
+              <Pagination
+                currentPage={currentPage}
+                totalItems={filteredServices.length}
+                itemsPerPage={itemsPerPage}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={(newItemsPerPage) => {
+                  setItemsPerPage(newItemsPerPage);
+                  setCurrentPage(1);
+                }}
+              />
+            </div>
+          )}
         </div>
 
         {showServiceModal && selectedService && (

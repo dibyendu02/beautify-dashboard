@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Hardcoded admin authentication
-      if (data.email === 'admin@beautify.com') {
+      if (data.email === 'admin@beautify.com' && data.password === 'Admin1234!') {
         const adminUser = {
           id: 'admin-123',
           email: 'admin@beautify.com',
@@ -91,6 +91,11 @@ export default function AdminLoginPage() {
           <p className="mt-2 text-center text-sm text-gray-600">
             Sign in to your administrator account
           </p>
+          <div className="mt-4 p-3 bg-gray-100 rounded-lg text-center">
+            <p className="text-xs text-gray-500">Demo Credentials</p>
+            <p className="text-sm font-mono text-gray-700">admin@beautify.com</p>
+            <p className="text-sm font-mono text-gray-700">Admin1234!</p>
+          </div>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>

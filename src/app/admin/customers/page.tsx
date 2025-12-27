@@ -617,8 +617,8 @@ export default function CustomersPage() {
           )}
         </div>
 
-        {/* Pagination */}
-        {filteredAndSortedCustomers.length > 0 && (
+        {/* Pagination - only show when there's more than one page */}
+        {filteredAndSortedCustomers.length > itemsPerPage && (
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <Pagination
               currentPage={currentPage}

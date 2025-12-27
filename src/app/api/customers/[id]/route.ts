@@ -32,10 +32,10 @@ const DEMO_CUSTOMERS = [
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = params.id;
+        const { id } = await params;
         const customer = DEMO_CUSTOMERS.find(c => c._id === id);
 
         if (!customer) {
@@ -59,10 +59,10 @@ export async function GET(
 
 export async function PUT(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = params.id;
+        const { id } = await params;
         const body = await request.json();
         const customerIndex = DEMO_CUSTOMERS.findIndex(c => c._id === id);
 
@@ -94,10 +94,10 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = params.id;
+        const { id } = await params;
         const customerIndex = DEMO_CUSTOMERS.findIndex(c => c._id === id);
 
         if (customerIndex === -1) {

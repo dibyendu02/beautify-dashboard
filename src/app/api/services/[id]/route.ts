@@ -48,10 +48,10 @@ const DEMO_SERVICES = [
 
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = params.id;
+        const { id } = await params;
         const service = DEMO_SERVICES.find(s => s._id === id);
 
         if (!service) {
@@ -75,10 +75,10 @@ export async function GET(
 
 export async function PUT(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = params.id;
+        const { id } = await params;
         const body = await request.json();
         const serviceIndex = DEMO_SERVICES.findIndex(s => s._id === id);
 
@@ -110,10 +110,10 @@ export async function PUT(
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = params.id;
+        const { id } = await params;
         const serviceIndex = DEMO_SERVICES.findIndex(s => s._id === id);
 
         if (serviceIndex === -1) {

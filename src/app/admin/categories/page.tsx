@@ -487,7 +487,7 @@ export default function CategoriesPage() {
         )}
 
         {/* Pagination */}
-        {filteredCategories.length > 0 && (
+        {filteredCategories.length > itemsPerPage && (
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <Pagination
               currentPage={currentPage}

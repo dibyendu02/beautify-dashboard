@@ -372,7 +372,7 @@ export default function NotificationsPage() {
             </div>
 
             {/* Pagination */}
-            {filteredNotifications.length > 0 && (
+            {filteredNotifications.length > itemsPerPage && (
               <div className="bg-white rounded-lg border border-gray-200 p-4 mt-6">
                 <Pagination
                   currentPage={currentPage}

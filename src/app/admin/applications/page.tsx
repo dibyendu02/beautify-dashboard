@@ -790,7 +790,7 @@ export default function MerchantApplicationsPage() {
         </div>
 
         {/* Pagination */}
-        {filteredApplications.length > 0 && (
+        {filteredApplications.length > itemsPerPage && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <Pagination
               currentPage={currentPage}

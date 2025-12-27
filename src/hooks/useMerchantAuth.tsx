@@ -343,7 +343,7 @@ export const MerchantAuthProvider = ({ children }: { children: ReactNode }) => {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       // Hardcoded merchant authentication
-      if (email === 'merchant@beautify.com') {
+      if (email === 'merchant@beautify.com' && password === 'Merchant1234!') {
         const newUser: MerchantUser = {
           id: 'merchant-123',
           email: 'merchant@beautify.com',

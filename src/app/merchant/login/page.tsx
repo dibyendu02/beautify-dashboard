@@ -315,6 +315,11 @@ function MerchantLoginPageContent() {
               <p className="text-gray-600">
                 Sign in to your merchant dashboard to manage your business
               </p>
+              <div className="mt-4 p-3 bg-pink-50 rounded-lg text-center border border-pink-100">
+                <p className="text-xs text-pink-600">Demo Credentials</p>
+                <p className="text-sm font-mono text-pink-700">merchant@beautify.com</p>
+                <p className="text-sm font-mono text-pink-700">Merchant1234!</p>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

@@ -550,7 +550,7 @@ export default function ReviewsPage() {
         </div>
 
         {/* Pagination */}
-        {filteredReviews.length > 0 && (
+        {filteredReviews.length > itemsPerPage && (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <Pagination
               currentPage={currentPage}
