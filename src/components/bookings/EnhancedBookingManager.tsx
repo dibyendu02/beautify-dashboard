@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Calendar,
   Clock,
@@ -22,6 +22,7 @@ import {
   Eye,
   Edit3,
   MoreHorizontal,
+  Send,
 } from 'lucide-react';
 import { formatCurrency, formatDate, cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
@@ -70,6 +71,16 @@ const paymentStatusColors = {
   failed: 'text-red-600',
 };
 
+interface ChatMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  message: string;
+  timestamp: string;
+  isOwn: boolean;
+  read: boolean;
+}
+
 export default function EnhancedBookingManager() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
@@ -82,6 +93,13 @@ export default function EnhancedBookingManager() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('today');
+
+  // Chat state
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
 
   // Stats
   const [stats, setStats] = useState({
@@ -329,6 +347,108 @@ export default function EnhancedBookingManager() {
   useEffect(() => {
     filterBookings();
   }, [bookings, searchQuery, statusFilter, dateFilter, selectedDate]);
+
+  // Chat functions
+  useEffect(() => {
+    if (showChat && selectedBooking) {
+      // Load demo chat messages when chat opens
+      const demoMessages: ChatMessage[] = [
+        {
+          id: '1',
+          senderId: selectedBooking.customer._id,
+          senderName: `${selectedBooking.customer.firstName} ${selectedBooking.customer.lastName}`,
+          message: 'Hi! I wanted to confirm my appointment for tomorrow.',
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+          isOwn: false,
+          read: true,
+        },
+        {
+          id: '2',
+          senderId: 'merchant',
+          senderName: 'You',
+          message: `Hello ${selectedBooking.customer.firstName}! Yes, your ${selectedBooking.service.name} appointment is confirmed. See you soon!`,
+          timestamp: new Date(Date.now() - 3000000).toISOString(),
+          isOwn: true,
+          read: true,
+        },
+        {
+          id: '3',
+          senderId: selectedBooking.customer._id,
+          senderName: `${selectedBooking.customer.firstName} ${selectedBooking.customer.lastName}`,
+          message: 'Perfect, thank you! Is there anything I should prepare beforehand?',
+          timestamp: new Date(Date.now() - 1800000).toISOString(),
+          isOwn: false,
+          read: true,
+        },
+      ];
+      setChatMessages(demoMessages);
+      setNewMessage('');
+    }
+  }, [showChat, selectedBooking]);
+
+  useEffect(() => {
+    // Scroll to bottom when messages change
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
+
+  const handleSendMessage = () => {
+    if (!newMessage.trim() || !selectedBooking) return;
+
+    const message: ChatMessage = {
+      id: Date.now().toString(),
+      senderId: 'merchant',
+      senderName: 'You',
+      message: newMessage.trim(),
+      timestamp: new Date().toISOString(),
+      isOwn: true,
+      read: false,
+    };
+
+    setChatMessages(prev => [...prev, message]);
+    setNewMessage('');
+    chatInputRef.current?.focus();
+
+    // Simulate customer typing and response
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      const responses = [
+        'Thank you for the information!',
+        'Got it, see you then!',
+        'Perfect, I appreciate your help.',
+        'That sounds great!',
+        'Thanks for getting back to me so quickly.',
+      ];
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+
+      const customerMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        senderId: selectedBooking.customer._id,
+        senderName: `${selectedBooking.customer.firstName} ${selectedBooking.customer.lastName}`,
+        message: randomResponse,
+        timestamp: new Date().toISOString(),
+        isOwn: false,
+        read: true,
+      };
+      setChatMessages(prev => [...prev, customerMessage]);
+    }, 2000);
+  };
+
+  const handleChatKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const formatMessageTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
 
   const loadBookings = async () => {
     try {
@@ -878,8 +998,8 @@ export default function EnhancedBookingManager() {
 
       {/* Booking Details Modal */}
       {showBookingDetails && selectedBooking && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-hidden">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto scrollbar-hide">
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold text-gray-900">Booking Details</h3>
@@ -1070,50 +1190,100 @@ export default function EnhancedBookingManager() {
 
       {/* Chat Modal */}
       {showChat && selectedBooking && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[600px]">
-            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full h-[600px] flex flex-col">
+            {/* Chat Header */}
+            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white rounded-t-xl">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                  <span className="text-primary-600 font-medium text-sm">
-                    {selectedBooking.customer.firstName.charAt(0)}
-                    {selectedBooking.customer.lastName.charAt(0)}
-                  </span>
+                <div className="relative">
+                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-medium text-sm">
+                      {selectedBooking.customer.firstName.charAt(0)}
+                      {selectedBooking.customer.lastName.charAt(0)}
+                    </span>
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">
                     {selectedBooking.customer.firstName} {selectedBooking.customer.lastName}
                   </h3>
-                  <p className="text-sm text-gray-600">
-                    {selectedBooking.service.name}
+                  <p className="text-sm text-green-500">
+                    {isTyping ? 'typing...' : 'Online'}
                   </p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
+                className="p-2"
                 onClick={() => setShowChat(false)}
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5 text-gray-500" />
               </Button>
             </div>
-            
-            <div className="p-4 h-96 bg-gray-50 flex items-center justify-center">
-              <div className="text-center">
-                <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Demo Chat Interface</h3>
-                <p className="text-gray-600 mb-4">
-                  This would be a real-time chat with {selectedBooking.customer.firstName}
-                </p>
-                <Button
-                  onClick={() => {
-                    toast.success('Demo message sent!');
-                    setShowChat(false);
-                  }}
-                  className="bg-primary-500 hover:bg-primary-600 text-white"
+
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white scrollbar-hide">
+              {chatMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
                 >
-                  Send Demo Message
-                </Button>
+                  <div className="max-w-xs lg:max-w-md">
+                    <div
+                      className={`px-4 py-3 rounded-2xl ${
+                        message.isOwn
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 text-gray-900'
+                      }`}
+                    >
+                      <p className="text-sm">{message.message}</p>
+                    </div>
+                    <div className={`text-xs text-gray-400 mt-1 ${message.isOwn ? 'text-right' : 'text-left'}`}>
+                      {formatMessageTime(message.timestamp)}
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="max-w-xs lg:max-w-md">
+                    <div className="px-4 py-3 bg-gray-100 rounded-2xl">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Message Input */}
+            <div className="border-t border-gray-200 p-4 bg-white rounded-b-xl">
+              <div className="flex items-center space-x-3">
+                <input
+                  ref={chatInputRef}
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleChatKeyPress}
+                  placeholder="Type a message..."
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!newMessage.trim()}
+                  className="w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
               </div>
             </div>
           </div>
