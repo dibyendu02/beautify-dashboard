@@ -419,7 +419,7 @@ export default function AnalyticsPage() {
                 <XAxis dataKey="month" stroke="#94a3b8" />
                 <YAxis stroke="#94a3b8" />
                 <Tooltip 
-                  formatter={(value) => formatCurrency(value)}
+                  formatter={(value) => formatCurrency(typeof value === 'number' ? value : parseFloat(String(value)))}
                   contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
                 />
                 <Area 
@@ -489,7 +489,7 @@ export default function AnalyticsPage() {
                   <XAxis dataKey="month" stroke="#94a3b8" />
                   <YAxis stroke="#94a3b8" />
                   <Tooltip 
-                    formatter={(value) => formatCurrency(value)}
+                    formatter={(value) => formatCurrency(typeof value === 'number' ? value : parseFloat(String(value)))}
                     contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
                   />
                   <Legend />
