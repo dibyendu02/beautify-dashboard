@@ -250,7 +250,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="space-y-6">
         {/* Welcome header */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
+        <div className="bg-white rounded-lg p-6 shadow-lg border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">
@@ -276,7 +276,7 @@ export default function DashboardPage() {
                 </select>
               </div>
               <div className="hidden lg:block">
-                <div className="bg-primary-50 rounded-xl p-4 border border-primary-200">
+                <div className="bg-primary-50 rounded-lg p-4 border border-primary-200">
                   <div className="flex items-center space-x-2">
                     <Scissors className="w-6 h-6 text-primary-600" />
                     <div>
@@ -290,230 +290,230 @@ export default function DashboardPage() {
           </div>
         </div>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-900">{stat.title}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-              </div>
-              <div className={cn('p-3 rounded-xl text-white', stat.color)}>
-                <stat.icon className="w-6 h-6" />
-              </div>
-            </div>
-            <div className="flex items-center mt-4">
-              {stat.change > 0 ? (
-                <ArrowUpRight className="w-4 h-4 text-green-500 mr-1" />
-              ) : (
-                <ArrowDownRight className="w-4 h-4 text-red-500 mr-1" />
-              )}
-              <span
-                className={cn(
-                  'text-sm font-medium',
-                  stat.change > 0 ? 'text-green-600' : 'text-red-600'
-                )}
-              >
-                {stat.change > 0 ? '+' : ''}{stat.change}%
-              </span>
-              <span className="text-sm text-gray-900 ml-1">vs last month</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Live Stats Bar */}
-      <div className="bg-gradient-to-r from-rose-400 to-pink-500 rounded-xl p-6 text-white shadow-lg">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Live Dashboard</h3>
-          <div className="flex items-center space-x-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-sm">Live</span>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="text-center">
-            <p className="text-2xl font-bold">{liveStats.todayBookings}</p>
-            <p className="text-sm opacity-90">Today's Bookings</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold">{formatCurrency(liveStats.todayRevenue)}</p>
-            <p className="text-sm opacity-90">Today's Revenue</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold">{liveStats.pendingBookings}</p>
-            <p className="text-sm opacity-90">Pending Bookings</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold">{liveStats.onlineCustomers}</p>
-            <p className="text-sm opacity-90">Online Customers</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Today's Schedule */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Today's Schedule</h3>
-            <Link href="/merchant/bookings">
-              <Button variant="ghost" size="sm">View All</Button>
-            </Link>
-          </div>
-          <div className="space-y-4">
-            {!Array.isArray(upcomingAppointments) || upcomingAppointments.length === 0 ? (
-              <div className="text-center py-8">
-                <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-900 text-sm">No appointments today</p>
-              </div>
-            ) : (
-              upcomingAppointments.map((appointment) => (
-                <div
-                  key={appointment._id}
-                  className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
-                  onClick={() => {
-                    setSelectedCustomer({
-                      _id: appointment.customer._id,
-                      name: `${appointment.customer.firstName} ${appointment.customer.lastName}`,
-                    });
-                    setShowQuickChat(true);
-                  }}
-                >
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
-                    <Clock className="w-5 h-5 text-primary-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">
-                      {appointment.customer.firstName} {appointment.customer.lastName}
-                    </p>
-                    <p className="text-sm text-gray-900">{appointment.service.name}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-medium text-primary-600">
-                      {new Date(appointment.scheduledDate).toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                      })}
-                    </p>
-                    <p className="text-sm text-gray-900">{appointment.service.duration}min</p>
-                    <MessageSquare className="w-4 h-4 text-gray-400 ml-2 inline" />
-                  </div>
+        {/* Stats grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">{stat.title}</p>
+                  <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
                 </div>
-              ))
+                <div className={cn('p-3 rounded-lg text-white', stat.color)}>
+                  <stat.icon className="w-6 h-6" />
+                </div>
+              </div>
+              <div className="flex items-center mt-4">
+                {stat.change > 0 ? (
+                  <ArrowUpRight className="w-4 h-4 text-green-500 mr-1" />
+                ) : (
+                  <ArrowDownRight className="w-4 h-4 text-red-500 mr-1" />
+                )}
+                <span
+                  className={cn(
+                    'text-sm font-medium',
+                    stat.change > 0 ? 'text-green-600' : 'text-red-600'
+                  )}
+                >
+                  {stat.change > 0 ? '+' : ''}{stat.change}%
+                </span>
+                <span className="text-sm text-gray-900 ml-1">vs last month</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Live Stats Bar */}
+        <div className="bg-blue-900 rounded-lg p-6 text-white shadow-lg">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Live Dashboard</h3>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-sm">Live</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <p className="text-2xl font-bold">{liveStats.todayBookings}</p>
+              <p className="text-sm opacity-90">Today's Bookings</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold">{formatCurrency(liveStats.todayRevenue)}</p>
+              <p className="text-sm opacity-90">Today's Revenue</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold">{liveStats.pendingBookings}</p>
+              <p className="text-sm opacity-90">Pending Bookings</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold">{liveStats.onlineCustomers}</p>
+              <p className="text-sm opacity-90">Online Customers</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Today's Schedule */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Today's Schedule</h3>
+              <Link href="/merchant/bookings">
+                <Button variant="ghost" size="sm">View All</Button>
+              </Link>
+            </div>
+            <div className="space-y-4">
+              {!Array.isArray(upcomingAppointments) || upcomingAppointments.length === 0 ? (
+                <div className="text-center py-8">
+                  <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-900 text-sm">No appointments today</p>
+                </div>
+              ) : (
+                upcomingAppointments.map((appointment) => (
+                  <div
+                    key={appointment._id}
+                    className="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                    onClick={() => {
+                      setSelectedCustomer({
+                        _id: appointment.customer._id,
+                        name: `${appointment.customer.firstName} ${appointment.customer.lastName}`,
+                      });
+                      setShowQuickChat(true);
+                    }}
+                  >
+                    <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+                      <Clock className="w-5 h-5 text-primary-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900">
+                        {appointment.customer.firstName} {appointment.customer.lastName}
+                      </p>
+                      <p className="text-sm text-gray-900">{appointment.service.name}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium text-primary-600">
+                        {new Date(appointment.scheduledDate).toLocaleTimeString('en-US', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false
+                        })}
+                      </p>
+                      <p className="text-sm text-gray-900">{appointment.service.duration}min</p>
+                      <MessageSquare className="w-4 h-4 text-gray-400 ml-2 inline" />
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Revenue Chart */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Revenue Trend</h3>
+              <Link href="/merchant/analytics">
+                <Button variant="ghost" size="sm">
+                  <BarChart3 className="w-4 h-4 mr-1" />
+                  Analytics
+                </Button>
+              </Link>
+            </div>
+            {revenueData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" fontSize={12} />
+                  <YAxis fontSize={12} />
+                  <Tooltip formatter={(value: any) => [formatCurrency(Number(value)), 'Revenue']} />
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="#8b5cf6"
+                    fill="#8b5cf6"
+                    fillOpacity={0.1}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-48 flex items-center justify-center text-gray-500">
+                <div className="text-center">
+                  <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm">No revenue data available</p>
+                </div>
+              </div>
             )}
           </div>
-        </div>
 
-        {/* Revenue Chart */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Revenue Trend</h3>
-            <Link href="/merchant/analytics">
-              <Button variant="ghost" size="sm">
-                <BarChart3 className="w-4 h-4 mr-1" />
-                Analytics
-              </Button>
-            </Link>
-          </div>
-          {revenueData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={200}>
-              <AreaChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" fontSize={12} />
-                <YAxis fontSize={12} />
-                <Tooltip formatter={(value: any) => [formatCurrency(Number(value)), 'Revenue']} />
-                <Area
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#8b5cf6"
-                  fill="#8b5cf6"
-                  fillOpacity={0.1}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-            <div className="h-48 flex items-center justify-center text-gray-500">
-              <div className="text-center">
-                <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-                <p className="text-sm">No revenue data available</p>
-              </div>
+          {/* Recent Activity */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+              <Link href="/merchant/analytics">
+                <Button variant="ghost" size="sm">
+                  <Eye className="w-4 h-4 mr-1" />
+                  View More
+                </Button>
+              </Link>
             </div>
-          )}
-        </div>
-
-        {/* Recent Activity */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-            <Link href="/merchant/analytics">
-              <Button variant="ghost" size="sm">
-                <Eye className="w-4 h-4 mr-1" />
-                View More
-              </Button>
-            </Link>
-          </div>
-          <div className="space-y-3">
-            {[
-              { icon: Calendar, text: 'New booking from Sarah Johnson', time: '5 min ago', color: 'text-blue-600 bg-blue-100' },
-              { icon: DollarSign, text: 'Payment received: €85.00', time: '12 min ago', color: 'text-green-600 bg-green-100' },
-              { icon: Star, text: 'New 5-star review from Mike Brown', time: '1 hour ago', color: 'text-yellow-600 bg-yellow-100' },
-              { icon: Package, text: 'Product "Hair Serum" running low', time: '2 hours ago', color: 'text-orange-600 bg-orange-100' },
-            ].map((activity, index) => (
-              <div key={index} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                <div className={cn('p-2 rounded-full', activity.color)}>
-                  <activity.icon className="w-4 h-4" />
+            <div className="space-y-3">
+              {[
+                { icon: Calendar, text: 'New booking from Sarah Johnson', time: '5 min ago', color: 'text-blue-600 bg-blue-100' },
+                { icon: DollarSign, text: 'Payment received: €85.00', time: '12 min ago', color: 'text-green-600 bg-green-100' },
+                { icon: Star, text: 'New 5-star review from Mike Brown', time: '1 hour ago', color: 'text-yellow-600 bg-yellow-100' },
+                { icon: Package, text: 'Product "Hair Serum" running low', time: '2 hours ago', color: 'text-orange-600 bg-orange-100' },
+              ].map((activity, index) => (
+                <div key={index} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg transition-colors">
+                  <div className={cn('p-2 rounded-full', activity.color)}>
+                    <activity.icon className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-900">{activity.text}</p>
+                    <p className="text-xs text-gray-500">{activity.time}</p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-900">{activity.text}</p>
-                  <p className="text-xs text-gray-500">{activity.time}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Enhanced Performance Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Performance Metrics */}
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Overview</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <TrendingUp className="w-6 h-6 text-green-600" />
+        {/* Enhanced Performance Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Performance Metrics */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Overview</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-green-50 rounded-lg">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <TrendingUp className="w-6 h-6 text-green-600" />
+                </div>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(dashboardStats?.totalRevenue || 0)}
+                </p>
+                <p className="text-sm text-gray-900">Total Revenue</p>
               </div>
-              <p className="text-2xl font-bold text-green-600">
-                {formatCurrency(dashboardStats?.totalRevenue || 0)}
-              </p>
-              <p className="text-sm text-gray-900">Total Revenue</p>
-            </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Users className="w-6 h-6 text-blue-600" />
+              <div className="text-center p-4 bg-blue-50 rounded-lg">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+                <p className="text-2xl font-bold text-blue-600">
+                  {dashboardStats?.totalCustomers || 0}
+                </p>
+                <p className="text-sm text-gray-900">Total Customers</p>
               </div>
-              <p className="text-2xl font-bold text-blue-600">
-                {dashboardStats?.totalCustomers || 0}
-              </p>
-              <p className="text-sm text-gray-900">Total Customers</p>
-            </div>
-            <div className="text-center p-4 bg-yellow-50 rounded-lg">
-              <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                <Star className="w-6 h-6 text-yellow-600" />
+              <div className="text-center p-4 bg-yellow-50 rounded-lg">
+                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <Star className="w-6 h-6 text-yellow-600" />
+                </div>
+                <p className="text-2xl font-bold text-yellow-600">
+                  {dashboardStats?.completedBookings || 0}
+                </p>
+                <p className="text-sm text-gray-900">Completed Bookings</p>
               </div>
-              <p className="text-2xl font-bold text-yellow-600">
-                {dashboardStats?.completedBookings || 0}
-              </p>
-              <p className="text-sm text-gray-900">Completed Bookings</p>
             </div>
           </div>
-        </div>
 
           {/* Recent Bookings */}
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">

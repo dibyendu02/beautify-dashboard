@@ -16,7 +16,7 @@ api.interceptors.request.use(
     const merchantToken = localStorage.getItem('merchantAuthToken');
     const regularToken = localStorage.getItem('authToken');
     const token = merchantToken || regularToken;
-    
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -42,44 +42,10 @@ api.interceptors.response.use(
 // Hardcoded Auth services (no API calls)
 export const authService = {
   login: async (email: string, password: string) => {
-    console.log('⚠️ authService.login called with hardcoded authentication');
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Hardcoded users
-    const hardcodedUsers = {
-      'admin@beautify.com': {
-        id: 'admin-123',
-        email: 'admin@beautify.com',
-        firstName: 'Jane',
-        lastName: 'Admin',
-        phone: '+1234567891',
-        role: 'admin',
-        avatar: undefined,
-        isActive: true,
-        isVerified: true,
-        createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-01T00:00:00.000Z',
-      },
-    };
-    
-    const user = hardcodedUsers[email as keyof typeof hardcodedUsers];
-    
-    if (!user) {
-      throw new Error('Invalid email or password');
-    }
-    
-    const token = `fake-token-${user.id}-${Date.now()}`;
-    
-    return {
-      success: true,
-      user,
-      token,
-      message: 'Login successful'
-    };
+    const response = await api.post('/auth/login', { email, password });
+    return response.data.data;
   },
-  
+
   register: async (userData: {
     email: string;
     password: string;
@@ -90,36 +56,36 @@ export const authService = {
   }) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     throw new Error('Registration not available in demo mode');
   },
-  
+
   getProfile: async () => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     const user = localStorage.getItem('user');
     if (!user) {
       throw new Error('No user data found');
     }
-    
+
     return {
       success: true,
       user: JSON.parse(user)
     };
   },
-  
+
   updateProfile: async (userData: any) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     const currentUser = localStorage.getItem('user');
     if (!currentUser) {
       throw new Error('No user data found');
     }
-    
+
     const updatedUser = { ...JSON.parse(currentUser), ...userData };
-    
+
     return {
       success: true,
       user: updatedUser
@@ -131,55 +97,10 @@ export const authService = {
 export const merchantAuthService = {
   // Hardcoded merchant login
   login: async (email: string, password: string) => {
-    console.log('🔍 merchantAuthService.login called with hardcoded authentication:', { email });
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    if (email === 'merchant@beautify.com') {
-      const user = {
-        id: 'merchant-123',
-        email: 'merchant@beautify.com',
-        firstName: 'John',
-        lastName: 'Merchant',
-        role: 'merchant',
-        isActive: true,
-        isVerified: true,
-        merchantId: 'merchant-123',
-        profileImage: undefined,
-        createdAt: '2024-01-01T00:00:00.000Z',
-      };
-      
-      const application = {
-        id: 'app-123',
-        status: 'approved',
-        businessName: 'John\'s Beauty Salon',
-        businessType: 'salon',
-        businessEmail: 'merchant@beautify.com',
-        applicationDate: '2024-01-01T00:00:00.000Z',
-        verificationSteps: {
-          businessEmailVerified: true,
-          documentsUploaded: true,
-          bankDetailsProvided: true,
-          backgroundCheckPassed: true,
-        },
-      };
-      
-      const token = `fake-merchant-token-${user.id}-${Date.now()}`;
-      
-      console.log('✅ merchantAuthService.login completed successfully');
-      return {
-        success: true,
-        user,
-        token,
-        merchantApplication: application,
-        message: 'Login successful'
-      };
-    } else {
-      throw new Error('Invalid email or password');
-    }
+    const response = await api.post('/auth/login', { email, password });
+    return response.data.data;
   },
-  
+
   // Hardcoded merchant registration
   register: async (merchantData: {
     email: string;
@@ -204,23 +125,23 @@ export const merchantAuthService = {
   }) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     throw new Error('Registration not available in demo mode');
   },
-  
+
   // Hardcoded merchant application
   applyForMerchantStatus: async (applicationData: any) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     throw new Error('Application submission not available in demo mode');
   },
-  
+
   // Hardcoded status check
   getStatus: async () => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     return {
       success: true,
       application: {
@@ -239,34 +160,34 @@ export const merchantAuthService = {
       }
     };
   },
-  
+
   // Hardcoded application update
   updateApplication: async (applicationData: any) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     return {
       success: true,
       message: 'Application updated successfully'
     };
   },
-  
+
   // Hardcoded email verification
   verifyBusinessEmail: async (token: string, applicationId: string) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     return {
       success: true,
       message: 'Email verified successfully'
     };
   },
-  
+
   // Hardcoded password reset request
   requestPasswordReset: async (email: string) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     if (email === 'merchant@beautify.com') {
       return {
         success: true,
@@ -276,12 +197,12 @@ export const merchantAuthService = {
       throw new Error('Email not found');
     }
   },
-  
+
   // Hardcoded password reset
   resetPassword: async (token: string, password: string) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     return {
       success: true,
       message: 'Password reset successfully'
@@ -295,17 +216,17 @@ export const merchantService = {
     const response = await api.post('/merchants', merchantData);
     return response.data;
   },
-  
+
   getProfile: async () => {
     const response = await api.get('/merchants/profile');
     return response.data;
   },
-  
+
   update: async (id: string, merchantData: any) => {
     const response = await api.put(`/merchants/${id}`, merchantData);
     return response.data;
   },
-  
+
   search: async (params: any) => {
     const response = await api.get('/merchants/search', { params });
     return response.data;
@@ -318,27 +239,27 @@ export const serviceService = {
     const response = await api.post('/services', serviceData);
     return response.data;
   },
-  
+
   getAll: async (params: any) => {
     const response = await api.get('/services', { params });
     return response.data;
   },
-  
+
   getById: async (id: string) => {
     const response = await api.get(`/services/${id}`);
     return response.data;
   },
-  
+
   update: async (id: string, serviceData: any) => {
     const response = await api.put(`/services/${id}`, serviceData);
     return response.data;
   },
-  
+
   delete: async (id: string) => {
     const response = await api.delete(`/services/${id}`);
     return response.data;
   },
-  
+
   getCategories: async () => {
     const response = await api.get('/services/categories');
     return response.data;
@@ -351,27 +272,27 @@ export const bookingService = {
     const response = await api.get('/bookings', { params });
     return response.data;
   },
-  
+
   getById: async (id: string) => {
     const response = await api.get(`/bookings/${id}`);
     return response.data;
   },
-  
+
   create: async (bookingData: any) => {
     const response = await api.post('/bookings', bookingData);
     return response.data;
   },
-  
+
   update: async (id: string, data: any) => {
     const response = await api.put(`/bookings/${id}`, data);
     return response.data;
   },
-  
+
   updateStatus: async (id: string, status: string) => {
     const response = await api.put(`/bookings/${id}/status`, { status });
     return response.data;
   },
-  
+
   cancel: async (id: string, reason: string) => {
     const response = await api.put(`/bookings/${id}/cancel`, { reason });
     return response.data;
@@ -384,22 +305,22 @@ export const customerService = {
     const response = await api.get('/customers', { params });
     return response.data;
   },
-  
+
   getById: async (id: string) => {
     const response = await api.get(`/customers/${id}`);
     return response.data;
   },
-  
+
   create: async (customerData: any) => {
     const response = await api.post('/customers', customerData);
     return response.data;
   },
-  
+
   update: async (id: string, customerData: any) => {
     const response = await api.put(`/customers/${id}`, customerData);
     return response.data;
   },
-  
+
   delete: async (id: string) => {
     const response = await api.delete(`/customers/${id}`);
     return response.data;
@@ -518,8 +439,8 @@ export const adminMerchantService = {
 
   // Get merchant analytics
   getAnalytics: async (merchantId?: string, period?: string) => {
-    const response = await api.get('/admin/merchants/analytics', { 
-      params: { merchantId, period } 
+    const response = await api.get('/admin/merchants/analytics', {
+      params: { merchantId, period }
     });
     return response.data;
   },
@@ -528,20 +449,20 @@ export const adminMerchantService = {
 // Analytics services
 export const analyticsService = {
   getOverview: async (params: any) => {
-    const response = await api.get('/analytics/overview', { params });
+    const response = await api.get('/merchant/stats', { params });
     return response.data;
   },
-  
+
   getRevenue: async (params: any) => {
     const response = await api.get('/analytics/revenue', { params });
     return response.data;
   },
-  
+
   getBookings: async (params: any) => {
     const response = await api.get('/analytics/bookings', { params });
     return response.data;
   },
-  
+
   getTopServices: async (params: any) => {
     const response = await api.get('/analytics/services/top', { params });
     return response.data;
@@ -554,17 +475,17 @@ export const paymentService = {
     const response = await api.get('/payments', { params });
     return response.data;
   },
-  
+
   getById: async (id: string) => {
     const response = await api.get(`/payments/${id}`);
     return response.data;
   },
-  
+
   refund: async (id: string, amount?: number, reason?: string) => {
     const response = await api.post(`/payments/${id}/refund`, { amount, reason });
     return response.data;
   },
-  
+
   getStatistics: async (params: any) => {
     const response = await api.get('/payments/statistics', { params });
     return response.data;
@@ -577,7 +498,7 @@ export const uploadService = {
     const formData = new FormData();
     formData.append('image', file);
     if (folder) formData.append('folder', folder);
-    
+
     const response = await api.post('/upload/image', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -585,12 +506,12 @@ export const uploadService = {
     });
     return response.data;
   },
-  
+
   uploadImages: async (files: File[], folder?: string) => {
     const formData = new FormData();
     files.forEach(file => formData.append('images', file));
     if (folder) formData.append('folder', folder);
-    
+
     const response = await api.post('/upload/images', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -607,13 +528,13 @@ export const stripeService = {
     const response = await api.post('/stripe/connect/create');
     return response.data;
   },
-  
+
   // Get Stripe Connect account status
   getConnectAccount: async () => {
     const response = await api.get('/stripe/connect/account');
     return response.data;
   },
-  
+
   // Generate Stripe Connect onboarding link
   createOnboardingLink: async (accountId: string, refreshUrl?: string, returnUrl?: string) => {
     const response = await api.post('/stripe/connect/onboarding', {
@@ -623,7 +544,7 @@ export const stripeService = {
     });
     return response.data;
   },
-  
+
   // Generate Stripe Connect dashboard link for account management
   createDashboardLink: async (accountId: string) => {
     const response = await api.post('/stripe/connect/merchant', {
@@ -631,13 +552,13 @@ export const stripeService = {
     });
     return response.data;
   },
-  
+
   // Disconnect Stripe account
   disconnectAccount: async () => {
     const response = await api.delete('/stripe/connect/disconnect');
     return response.data;
   },
-  
+
   // Get platform fee configuration
   getPlatformFees: async () => {
     const response = await api.get('/stripe/platform/fees');
@@ -815,8 +736,8 @@ export const gdprService = {
 
   // Process data deletion request
   deleteUserData: async (userId: string, reason?: string) => {
-    const response = await api.delete(`/gdpr/delete-data/${userId}`, { 
-      data: { reason } 
+    const response = await api.delete(`/gdpr/delete-data/${userId}`, {
+      data: { reason }
     });
     return response.data;
   },
@@ -857,8 +778,8 @@ export const gdprService = {
 export const advancedAnalyticsService = {
   // Platform overview analytics
   getPlatformOverview: async (period?: string) => {
-    const response = await api.get('/admin/analytics/platform-overview', { 
-      params: { period } 
+    const response = await api.get('/admin/analytics/platform-overview', {
+      params: { period }
     });
     return response.data;
   },
@@ -875,8 +796,8 @@ export const advancedAnalyticsService = {
 
   // User growth analytics
   getUserGrowthAnalytics: async (period?: string) => {
-    const response = await api.get('/admin/analytics/user-growth', { 
-      params: { period } 
+    const response = await api.get('/admin/analytics/user-growth', {
+      params: { period }
     });
     return response.data;
   },
@@ -893,16 +814,16 @@ export const advancedAnalyticsService = {
 
   // Top performing services/merchants
   getTopPerformers: async (type: 'services' | 'merchants', period?: string) => {
-    const response = await api.get(`/admin/analytics/top-${type}`, { 
-      params: { period } 
+    const response = await api.get(`/admin/analytics/top-${type}`, {
+      params: { period }
     });
     return response.data;
   },
 
   // Financial insights
   getFinancialInsights: async (period?: string) => {
-    const response = await api.get('/admin/analytics/financial-insights', { 
-      params: { period } 
+    const response = await api.get('/admin/analytics/financial-insights', {
+      params: { period }
     });
     return response.data;
   },

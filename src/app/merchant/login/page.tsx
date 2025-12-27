@@ -23,15 +23,15 @@ function MerchantLoginPageContent() {
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [showRegistrationSuccess, setShowRegistrationSuccess] = useState(false);
   const redirectAttempted = useRef(false);
-  
-  const { 
-    login, 
+
+  const {
+    login,
     logout,
-    isLoading, 
-    isAuthenticated, 
-    user, 
+    isLoading,
+    isAuthenticated,
+    user,
     application,
-    requestPasswordReset 
+    requestPasswordReset
   } = useMerchantAuth();
 
   const {
@@ -48,7 +48,7 @@ function MerchantLoginPageContent() {
   // Check if merchant is already logged in
   useEffect(() => {
     console.log('🔍 LoginPage useEffect:', { isAuthenticated, user: !!user, isLoading, redirectAttempted: redirectAttempted.current });
-    
+
     // Only proceed if auth state is fully loaded and we haven't attempted redirect yet
     if (isLoading || redirectAttempted.current) {
       return;
@@ -58,10 +58,10 @@ function MerchantLoginPageContent() {
     if (isAuthenticated && user) {
       const redirectTo = searchParams.get('redirect') || '/merchant';
       console.log('🚀 LoginPage: User authenticated, redirecting to:', redirectTo);
-      
+
       redirectAttempted.current = true;
       setIsRedirecting(true);
-      
+
       // Use a longer timeout to ensure state is stable and avoid race conditions
       const timeoutId = setTimeout(() => {
         router.replace(redirectTo);
@@ -100,7 +100,7 @@ function MerchantLoginPageContent() {
       console.log('🚀 Form submitted, calling login...', data);
       const success = await login(data.email, data.password, data.rememberMe);
       console.log('📝 Login function returned:', success);
-      
+
       if (success) {
         // Don't redirect here - let the useEffect handle it after auth state updates
         console.log('✅ Login successful, auth state will handle redirect');
@@ -124,7 +124,7 @@ function MerchantLoginPageContent() {
     if (!resetEmail) {
       return;
     }
-    
+
     const success = await requestPasswordReset(resetEmail);
     if (success) {
       setShowPasswordReset(false);
@@ -134,7 +134,7 @@ function MerchantLoginPageContent() {
 
   const getApplicationStatusBadge = () => {
     if (!application) return null;
-    
+
     const statusConfig = {
       pending: { color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle, label: 'Application Pending' },
       under_review: { color: 'bg-blue-100 text-blue-800', icon: AlertCircle, label: 'Under Review' },
@@ -142,10 +142,10 @@ function MerchantLoginPageContent() {
       rejected: { color: 'bg-red-100 text-red-800', icon: AlertCircle, label: 'Rejected' },
       incomplete: { color: 'bg-gray-100 text-gray-800', icon: AlertCircle, label: 'Incomplete' }
     };
-    
+
     const config = statusConfig[application.status];
     const Icon = config.icon;
-    
+
     return (
       <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
         <Icon className="w-4 h-4 mr-1" />
@@ -159,12 +159,12 @@ function MerchantLoginPageContent() {
       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-lg mb-6">
-              <Image 
-                src="/beautify_logo.png" 
-                alt="Beautify Logo" 
-                width={48} 
-                height={48} 
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-lg shadow-lg mb-6">
+              <Image
+                src="/beautify_logo.png"
+                alt="Beautify Logo"
+                width={48}
+                height={48}
                 className="object-contain"
               />
             </div>
@@ -174,7 +174,7 @@ function MerchantLoginPageContent() {
             </p>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+          <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-8">
             <div className="space-y-4">
               <div>
                 <label htmlFor="resetEmail" className="block text-sm font-medium text-gray-700 mb-2">
@@ -228,17 +228,17 @@ function MerchantLoginPageContent() {
           <span>Logout</span>
         </button>
       )}
-      
+
       {/* Left side - Brand/Info */}
       <div className="hidden lg:flex lg:flex-1 lg:flex-col lg:justify-center lg:px-20 xl:px-24 bg-white border-r border-gray-100">
         <div className="mx-auto w-full max-w-sm">
           <div className="mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl shadow-lg mb-6">
-              <Image 
-                src="/beautify_logo.png" 
-                alt="Beautify Logo" 
-                width={56} 
-                height={56} 
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl shadow-lg mb-6">
+              <Image
+                src="/beautify_logo.png"
+                alt="Beautify Logo"
+                width={56}
+                height={56}
                 className="object-contain"
               />
             </div>
@@ -249,12 +249,12 @@ function MerchantLoginPageContent() {
               </span>
             </h1>
             <p className="text-gray-700 leading-relaxed">
-              Grow your beauty business with our comprehensive merchant platform. 
+              Grow your beauty business with our comprehensive merchant platform.
               Manage appointments, customers, services, and revenue all in one place.
             </p>
           </div>
-          
-          <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-xl p-6 border border-pink-100">
+
+          <div className="bg-gradient-to-r from-pink-50 to-rose-50 rounded-lg p-6 border border-pink-100">
             <div className="flex items-center mb-4">
               <Store className="w-6 h-6 text-pink-600 mr-3" />
               <span className="text-gray-900 font-semibold">For Beauty Professionals</span>
@@ -265,19 +265,19 @@ function MerchantLoginPageContent() {
                 Smart appointment scheduling
               </li>
               <li className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-pink-500 mr-2" />
+                <CheckCircle className="w-4 h-4 text-primary-500 mr-2" />
                 Customer relationship management
               </li>
               <li className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-pink-500 mr-2" />
+                <CheckCircle className="w-4 h-4 text-primary-500 mr-2" />
                 Secure payment processing
               </li>
               <li className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-pink-500 mr-2" />
+                <CheckCircle className="w-4 h-4 text-primary-500 mr-2" />
                 Business analytics & insights
               </li>
               <li className="flex items-center">
-                <CheckCircle className="w-4 h-4 text-pink-500 mr-2" />
+                <CheckCircle className="w-4 h-4 text-primary-500 mr-2" />
                 Marketing & promotion tools
               </li>
             </ul>
@@ -290,12 +290,12 @@ function MerchantLoginPageContent() {
         <div className="mx-auto w-full max-w-sm">
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl shadow-lg mb-4">
-              <Image 
-                src="/beautify_logo.png" 
-                alt="Beautify Logo" 
-                width={48} 
-                height={48} 
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-600 rounded-lg shadow-lg mb-4">
+              <Image
+                src="/beautify_logo.png"
+                alt="Beautify Logo"
+                width={48}
+                height={48}
                 className="object-contain"
               />
             </div>
@@ -309,7 +309,7 @@ function MerchantLoginPageContent() {
             </div>
           )}
 
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+          <div className="bg-white rounded-lg shadow-lg border border-gray-100 p-8">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h2>
               <p className="text-gray-600">
@@ -402,15 +402,15 @@ function MerchantLoginPageContent() {
                   <input
                     {...register('rememberMe')}
                     type="checkbox"
-                    className="w-4 h-4 text-pink-600 bg-gray-100 border-gray-300 rounded focus:ring-pink-500 focus:ring-2"
+                    className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2"
                   />
                   <span className="ml-2 text-sm text-gray-700">Remember me for 30 days</span>
                 </label>
-                
+
                 <button
                   type="button"
                   onClick={() => setShowPasswordReset(true)}
-                  className="text-sm text-pink-600 hover:text-pink-500 transition-colors"
+                  className="text-sm text-primary-600 hover:text-primary-500 transition-colors"
                 >
                   Forgot password?
                 </button>
@@ -455,19 +455,19 @@ function MerchantLoginPageContent() {
                 </Link>
               </p>
             </div>
-            
+
             <div className="mt-4 text-center">
               <p className="text-gray-600 text-sm">
                 Are you a customer? Download our mobile app for bookings
               </p>
             </div>
-            
+
             <div className="mt-3 text-center">
               <p className="text-gray-600 text-sm">
                 Administrator?{' '}
                 <Link
                   href="/admin/login"
-                  className="text-pink-600 font-semibold hover:text-pink-500 transition-colors"
+                  className="text-primary-600 font-semibold hover:text-primary-500 transition-colors"
                 >
                   Admin Portal
                 </Link>
@@ -489,7 +489,7 @@ function MerchantLoginPageContent() {
 
 function LoadingSpinner() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-pink-500 border-t-transparent mx-auto mb-4"></div>
         <p className="text-gray-600">Loading merchant login...</p>
@@ -500,15 +500,15 @@ function LoadingSpinner() {
 
 function ErrorFallback() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-rose-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 flex items-center justify-center">
       <div className="text-center">
         <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <AlertCircle className="w-6 h-6 text-red-600" />
         </div>
         <p className="text-gray-600 mb-4">Something went wrong loading the login page.</p>
-        <button 
-          onClick={() => window.location.reload()} 
-          className="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
         >
           Reload Page
         </button>
