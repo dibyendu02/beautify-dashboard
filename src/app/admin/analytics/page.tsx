@@ -50,6 +50,23 @@ import {
   Target,
   Percent,
 } from 'lucide-react';
+import {
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  LineChart as RechartsLineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+} from 'recharts';
 import { cn, formatCurrency } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
@@ -71,6 +88,11 @@ interface AnalyticsData {
     month: string;
     revenue: number;
     bookings: number;
+    hairSalon: number;
+    spa: number;
+    nailSalon: number;
+    medical: number;
+    barbershop: number;
   }>;
   topPerformingMerchants: Array<{
     id: string;
@@ -149,18 +171,18 @@ export default function AnalyticsPage() {
         },
       },
       revenueByMonth: [
-        { month: 'Jan', revenue: 12450, bookings: 156 },
-        { month: 'Feb', revenue: 15620, bookings: 189 },
-        { month: 'Mar', revenue: 18930, bookings: 234 },
-        { month: 'Apr', revenue: 22100, bookings: 278 },
-        { month: 'May', revenue: 19800, bookings: 245 },
-        { month: 'Jun', revenue: 25300, bookings: 312 },
-        { month: 'Jul', revenue: 28450, bookings: 345 },
-        { month: 'Aug', revenue: 31200, bookings: 389 },
-        { month: 'Sep', revenue: 29800, bookings: 367 },
-        { month: 'Oct', revenue: 33500, bookings: 412 },
-        { month: 'Nov', revenue: 36200, bookings: 456 },
-        { month: 'Dec', revenue: 41250, bookings: 523 },
+        { month: 'Jan', revenue: 12450, bookings: 156, hairSalon: 4350, spa: 3600, nailSalon: 2100, medical: 1800, barbershop: 600 },
+        { month: 'Feb', revenue: 15620, bookings: 189, hairSalon: 5250, spa: 4600, nailSalon: 2800, medical: 2100, barbershop: 870 },
+        { month: 'Mar', revenue: 18930, bookings: 234, hairSalon: 6400, spa: 5500, nailSalon: 3200, medical: 2500, barbershop: 1330 },
+        { month: 'Apr', revenue: 22100, bookings: 278, hairSalon: 7500, spa: 6400, nailSalon: 3900, medical: 3000, barbershop: 1300 },
+        { month: 'May', revenue: 19800, bookings: 245, hairSalon: 6800, spa: 5700, nailSalon: 3500, medical: 2700, barbershop: 1100 },
+        { month: 'Jun', revenue: 25300, bookings: 312, hairSalon: 8500, spa: 7200, nailSalon: 4200, medical: 3500, barbershop: 1900 },
+        { month: 'Jul', revenue: 28450, bookings: 345, hairSalon: 9600, spa: 8100, nailSalon: 4600, medical: 4000, barbershop: 2150 },
+        { month: 'Aug', revenue: 31200, bookings: 389, hairSalon: 10500, spa: 8900, nailSalon: 5200, medical: 4400, barbershop: 2200 },
+        { month: 'Sep', revenue: 29800, bookings: 367, hairSalon: 10100, spa: 8500, nailSalon: 4900, medical: 4200, barbershop: 2100 },
+        { month: 'Oct', revenue: 33500, bookings: 412, hairSalon: 11300, spa: 9400, nailSalon: 5600, medical: 4700, barbershop: 2500 },
+        { month: 'Nov', revenue: 36200, bookings: 456, hairSalon: 12200, spa: 10100, nailSalon: 6100, medical: 5300, barbershop: 2500 },
+        { month: 'Dec', revenue: 41250, bookings: 523, hairSalon: 14000, spa: 11500, nailSalon: 7000, medical: 6200, barbershop: 2550 },
       ],
       topPerformingMerchants: [
         { id: '1', name: 'Luxe Spa & Wellness', revenue: 28750, bookings: 203, rating: 4.9 },
@@ -381,208 +403,151 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Revenue Chart Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Revenue Area Chart */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+            <h2 className="text-xl font-semibold text-slate-900 mb-6">Monthly Revenue</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={analytics.revenueByMonth}>
+                <defs>
+                  <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ec4899" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="month" stroke="#94a3b8" />
+                <YAxis stroke="#94a3b8" />
+                <Tooltip 
+                  formatter={(value) => formatCurrency(value)}
+                  contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#ec4899" 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#revenueGrad)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+            <div className="mt-4 p-4 bg-pink-50 rounded-lg">
+              <p className="text-sm text-slate-600">Total Revenue</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {formatCurrency(analytics.revenueByMonth.reduce((sum, item) => sum + item.revenue, 0))}
+              </p>
+            </div>
+          </div>
+
+          {/* Bookings Bar Chart */}
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+            <h2 className="text-xl font-semibold text-slate-900 mb-6">Monthly Bookings</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={analytics.revenueByMonth}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis dataKey="month" stroke="#94a3b8" />
+                <YAxis stroke="#94a3b8" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
+                />
+                <Bar dataKey="bookings" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-slate-600">Total Bookings</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {analytics.revenueByMonth.reduce((sum, item) => sum + item.bookings, 0).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Service Category Breakdown */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-slate-900">Revenue Trends</h2>
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant={chartView === 'revenue' ? 'outline' : 'ghost'} 
-                size="sm"
-                onClick={() => setChartView('revenue')}
-              >
-                <LineChart className="w-4 h-4 mr-2" />
-                Revenue
-              </Button>
-              <Button 
-                variant={chartView === 'bookings' ? 'outline' : 'ghost'} 
-                size="sm"
-                onClick={() => setChartView('bookings')}
-              >
-                <BarChart3 className="w-4 h-4 mr-2" />
-                Bookings
-              </Button>
+          <h2 className="text-xl font-semibold text-slate-900 mb-6">Service Category Revenue Breakdown</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Stacked Area by Category */}
+            <div>
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={analytics.revenueByMonth}>
+                  <defs>
+                    <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f97316" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="spaGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                    </linearGradient>
+                    <linearGradient id="nailGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="month" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip 
+                    formatter={(value) => formatCurrency(value)}
+                    contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
+                  />
+                  <Legend />
+                  <Area 
+                    type="monotone" 
+                    dataKey="hairSalon" 
+                    name="Hair Salon"
+                    stackId="1"
+                    stroke="#f97316" 
+                    fill="url(#hairGrad)"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="spa" 
+                    name="Spa"
+                    stackId="1"
+                    stroke="#06b6d4" 
+                    fill="url(#spaGrad)"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="nailSalon" 
+                    name="Nail Salon"
+                    stackId="1"
+                    stroke="#10b981" 
+                    fill="url(#nailGrad)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
-          </div>
-          
-          {/* Interactive Chart */}
-          <div className="h-80 relative">
-            {chartView === 'revenue' ? (
-              /* Revenue Line Chart */
-              <svg className="w-full h-full" viewBox="0 0 800 320" preserveAspectRatio="none">
-                {/* Grid Lines */}
-                <defs>
-                  <pattern id="grid" width="66.67" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 66.67 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" strokeWidth="1"/>
-                  </pattern>
-                  <linearGradient id="revenueGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#ec4899" stopOpacity="0.3"/>
-                    <stop offset="100%" stopColor="#ec4899" stopOpacity="0.05"/>
-                  </linearGradient>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-                
-                {analytics.revenueByMonth.length > 0 && (
-                  <>
-                    {/* Revenue Area */}
-                    <path
-                      d={analytics.revenueByMonth.map((point, index) => {
-                        const x = (index / (analytics.revenueByMonth.length - 1)) * 800;
-                        const maxRevenue = Math.max(...analytics.revenueByMonth.map(p => p.revenue));
-                        const y = 320 - ((point.revenue / maxRevenue) * 280) - 20;
-                        return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-                      }).join(' ') + ' L 800 320 L 0 320 Z'}
-                      fill="url(#revenueGradient)"
-                    />
-                    
-                    {/* Revenue Line */}
-                    <path
-                      d={analytics.revenueByMonth.map((point, index) => {
-                        const x = (index / (analytics.revenueByMonth.length - 1)) * 800;
-                        const maxRevenue = Math.max(...analytics.revenueByMonth.map(p => p.revenue));
-                        const y = 320 - ((point.revenue / maxRevenue) * 280) - 20;
-                        return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-                      }).join(' ')}
-                      fill="none"
-                      stroke="#ec4899"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    
-                    {/* Data Points */}
-                    {analytics.revenueByMonth.map((point, index) => {
-                      const x = (index / (analytics.revenueByMonth.length - 1)) * 800;
-                      const maxRevenue = Math.max(...analytics.revenueByMonth.map(p => p.revenue));
-                      const y = 320 - ((point.revenue / maxRevenue) * 280) - 20;
-                      return (
-                        <g key={`revenue-point-${index}`}>
-                          <circle
-                            cx={x}
-                            cy={y}
-                            r="6"
-                            fill="#ec4899"
-                            stroke="#fff"
-                            strokeWidth="3"
-                            className="hover:r-8 transition-all cursor-pointer drop-shadow-lg"
-                          />
-                          <text
-                            x={x}
-                            y={y - 15}
-                            textAnchor="middle"
-                            className="text-xs font-medium fill-slate-700 opacity-0 hover:opacity-100 transition-opacity"
-                          >
-                            {formatCurrency(point.revenue)}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </>
-                )}
-              </svg>
-            ) : (
-              /* Bookings Bar Chart */
-              <svg className="w-full h-full" viewBox="0 0 800 320" preserveAspectRatio="none">
-                <defs>
-                  <pattern id="grid" width="66.67" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 66.67 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" strokeWidth="1"/>
-                  </pattern>
-                  <linearGradient id="bookingsGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.8"/>
-                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.3"/>
-                  </linearGradient>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-                
-                {analytics.revenueByMonth.length > 0 && (
-                  <>
-                    {/* Booking Bars */}
-                    {analytics.revenueByMonth.map((point, index) => {
-                      const barWidth = 800 / analytics.revenueByMonth.length * 0.6;
-                      const x = (index / (analytics.revenueByMonth.length - 1)) * 800 - barWidth / 2;
-                      const maxBookings = Math.max(...analytics.revenueByMonth.map(p => p.bookings));
-                      const barHeight = (point.bookings / maxBookings) * 280;
-                      const y = 320 - barHeight - 20;
-                      
-                      return (
-                        <g key={`booking-bar-${index}`}>
-                          <rect
-                            x={x}
-                            y={y}
-                            width={barWidth}
-                            height={barHeight}
-                            fill="url(#bookingsGradient)"
-                            stroke="#3b82f6"
-                            strokeWidth="1"
-                            rx="4"
-                            className="hover:opacity-80 transition-opacity cursor-pointer"
-                          />
-                          <text
-                            x={x + barWidth / 2}
-                            y={y - 5}
-                            textAnchor="middle"
-                            className="text-xs font-medium fill-slate-700"
-                          >
-                            {point.bookings}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </>
-                )}
-              </svg>
-            )}
-            
-            {/* X-axis labels */}
-            <div className="absolute bottom-0 left-0 right-0 flex justify-between text-xs text-slate-500 mt-2 px-4">
-              {analytics.revenueByMonth.map((point, index) => (
-                <span key={index} className="text-center">
-                  {point.month}
-                </span>
-              ))}
-            </div>
-            
-            {/* Y-axis labels */}
-            <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-xs text-slate-500 -ml-16 py-4">
-              {chartView === 'revenue' ? (
-                <>
-                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)))}</span>
-                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)) * 0.75)}</span>
-                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)) * 0.5)}</span>
-                  <span>{formatCurrency(Math.max(...analytics.revenueByMonth.map(p => p.revenue)) * 0.25)}</span>
-                  <span>$0</span>
-                </>
-              ) : (
-                <>
-                  <span>{Math.max(...analytics.revenueByMonth.map(p => p.bookings))}</span>
-                  <span>{Math.round(Math.max(...analytics.revenueByMonth.map(p => p.bookings)) * 0.75)}</span>
-                  <span>{Math.round(Math.max(...analytics.revenueByMonth.map(p => p.bookings)) * 0.5)}</span>
-                  <span>{Math.round(Math.max(...analytics.revenueByMonth.map(p => p.bookings)) * 0.25)}</span>
-                  <span>0</span>
-                </>
-              )}
-            </div>
-          </div>
-          
-          {/* Chart Legend and Summary */}
-          <div className="flex items-center justify-between mt-6">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center">
-                <div className={cn("w-4 h-0.5 mr-2", chartView === 'revenue' ? 'bg-pink-500' : 'bg-blue-500')}></div>
-                <span className="text-sm text-slate-600">
-                  {chartView === 'revenue' ? 'Monthly Revenue' : 'Monthly Bookings'}
-                </span>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-slate-600">
-                {chartView === 'revenue' ? 'Total for Period' : 'Total Bookings'}
-              </p>
-              <p className="text-lg font-semibold text-slate-900">
-                {chartView === 'revenue' 
-                  ? formatCurrency(analytics.revenueByMonth.reduce((sum, item) => sum + item.revenue, 0))
-                  : analytics.revenueByMonth.reduce((sum, item) => sum + item.bookings, 0).toLocaleString()
-                }
-              </p>
+
+            {/* Category Pie Chart */}
+            <div>
+              <ResponsiveContainer width="100%" height={300}>
+                <RechartsPieChart>
+                  <Pie
+                    data={analytics.serviceCategories}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percentage }) => `${name} ${percentage}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="percentage"
+                  >
+                    {[
+                      { color: '#f97316' },
+                      { color: '#06b6d4' },
+                      { color: '#10b981' },
+                      { color: '#8b5cf6' },
+                      { color: '#ec4899' },
+                    ].map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `${value}%`} />
+                </RechartsPieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
