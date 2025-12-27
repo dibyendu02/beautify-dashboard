@@ -260,30 +260,31 @@ export default function DashboardPage() {
                 Here's what's happening with your beauty business today.
               </p>
             </div>
-            <div className="hidden md:flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Filter className="w-4 h-4 text-gray-500" />
-                <select
-                  value={selectedDateRange}
-                  onChange={(e) => setSelectedDateRange(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
-                >
-                  {dateRanges.map((range) => (
-                    <option key={range.value} value={range.value}>
-                      Last {range.label}
-                    </option>
-                  ))}
-                </select>
+            <div className="hidden md:flex items-end space-x-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-medium text-gray-700">Filter</label>
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-gray-500" />
+                  <select
+                    value={selectedDateRange}
+                    onChange={(e) => setSelectedDateRange(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
+                  >
+                    {dateRanges.map((range) => (
+                      <option key={range.value} value={range.value}>
+                        Last {range.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <div className="hidden lg:block">
-                <div className="bg-primary-50 rounded-lg p-4 border border-primary-200">
-                  <div className="flex items-center space-x-2">
-                    <Scissors className="w-6 h-6 text-primary-600" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">Today's Schedule</p>
-                      <p className="text-gray-600 text-sm">{Array.isArray(upcomingAppointments) ? upcomingAppointments.length : 0} appointments</p>
-                    </div>
-                  </div>
+              <div className="hidden lg:flex lg:flex-col lg:gap-1">
+                <label className="text-xs font-medium text-gray-700">Today's Schedule</label>
+                <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <Scissors className="w-4 h-4 text-gray-600" />
+                  <span className="text-sm font-medium text-gray-900">
+                    {Array.isArray(upcomingAppointments) ? upcomingAppointments.length : 0} appointments
+                  </span>
                 </div>
               </div>
             </div>
@@ -583,7 +584,7 @@ export default function DashboardPage() {
       {/* Enhanced Quick Actions */}
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
           <Link href="/merchant/services/new">
             <div className="p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors cursor-pointer group">
               <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center mb-3 group-hover:bg-primary-200 transition-colors">

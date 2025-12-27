@@ -442,14 +442,14 @@ const ViewMerchantModal: React.FC<ViewMerchantModalProps> = ({ isOpen, onClose, 
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-out">
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900">Merchant Details</h2>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
-        
+
         <div className="p-6 space-y-6">
           {/* Business Information */}
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4">
@@ -499,7 +499,7 @@ const ViewMerchantModal: React.FC<ViewMerchantModalProps> = ({ isOpen, onClose, 
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-gray-900">Business Statistics</h4>
               <div className="grid grid-cols-2 gap-4">
-                
+
                 {/* Revenue Card */}
                 <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                   <div className="text-center">
@@ -530,13 +530,12 @@ const ViewMerchantModal: React.FC<ViewMerchantModalProps> = ({ isOpen, onClose, 
                       {merchant.rating > 0 && (
                         <div className="flex">
                           {[1, 2, 3, 4, 5].map((star) => (
-                            <Star 
-                              key={star} 
-                              className={`w-4 h-4 ${
-                                star <= merchant.rating 
-                                  ? 'text-blue-500 fill-current' 
+                            <Star
+                              key={star}
+                              className={`w-4 h-4 ${star <= merchant.rating
+                                  ? 'text-blue-500 fill-current'
                                   : 'text-gray-300'
-                              }`} 
+                                }`}
                             />
                           ))}
                         </div>
@@ -550,8 +549,8 @@ const ViewMerchantModal: React.FC<ViewMerchantModalProps> = ({ isOpen, onClose, 
                 <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
                   <div className="text-center">
                     <div className="text-xl font-semibold text-gray-900 mb-1">
-                      {new Date(merchant.joinDate).toLocaleDateString('en-US', { 
-                        month: 'short', 
+                      {new Date(merchant.joinDate).toLocaleDateString('en-US', {
+                        month: 'short',
                         day: 'numeric',
                         year: 'numeric'
                       })}
@@ -625,7 +624,7 @@ const EditMerchantModal: React.FC<EditMerchantModalProps> = ({ isOpen, onClose, 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       onSave(formData);
@@ -645,14 +644,14 @@ const EditMerchantModal: React.FC<EditMerchantModalProps> = ({ isOpen, onClose, 
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-out">
         <div className="flex justify-between items-center p-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold text-gray-900">Edit Merchant</h2>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Business Information */}
           <div className="space-y-4">
@@ -767,15 +766,15 @@ const EditMerchantModal: React.FC<EditMerchantModalProps> = ({ isOpen, onClose, 
         </form>
 
         <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
-          <Button 
-            type="button" 
-            variant="outline" 
+          <Button
+            type="button"
+            variant="outline"
             onClick={onClose}
             disabled={isLoading}
           >
             Cancel
           </Button>
-          <Button 
+          <Button
             type="submit"
             onClick={handleSubmit}
             disabled={isLoading}
@@ -806,17 +805,17 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({ isOpen, onClose
             </div>
             <h3 className="text-lg font-semibold text-gray-900">Delete Merchant</h3>
           </div>
-          
+
           <p className="text-gray-600 mb-6">
-            Are you sure you want to delete <strong>{merchant.businessName}</strong>? 
+            Are you sure you want to delete <strong>{merchant.businessName}</strong>?
             This action cannot be undone and will permanently remove all associated data.
           </p>
-          
+
           <div className="flex justify-end space-x-3">
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={onConfirm}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
@@ -869,14 +868,14 @@ export default function MerchantsPage() {
     const businessTypes = ['Hair Salon', 'Spa', 'Barbershop', 'Nail Salon', 'Medical Spa'];
     const statuses: Array<'active' | 'suspended' | 'pending' | 'rejected'> = ['active', 'suspended', 'pending', 'rejected'];
     const cities = ['New York', 'Los Angeles', 'Chicago', 'Miami', 'Boston', 'Seattle', 'Austin', 'Denver'];
-    
+
     const demoData: MerchantData[] = [];
-    
+
     for (let i = 1; i <= 45; i++) {
       const status = statuses[Math.floor(Math.random() * statuses.length)];
       const category = businessTypes[Math.floor(Math.random() * businessTypes.length)];
       const city = cities[Math.floor(Math.random() * cities.length)];
-      
+
       demoData.push({
         id: i.toString(),
         businessName: `${category === 'Hair Salon' ? 'Bella' : category === 'Spa' ? 'Luxe' : category === 'Barbershop' ? 'Urban' : category === 'Nail Salon' ? 'Elite' : 'Glow'} ${category} ${i}`,
@@ -894,7 +893,7 @@ export default function MerchantsPage() {
         lastActivity: new Date(2024, 0, Math.floor(Math.random() * 30) + 1).toISOString().split('T')[0],
       });
     }
-    
+
     return demoData;
   };
 
@@ -976,13 +975,13 @@ export default function MerchantsPage() {
         setShowEditModal(true);
         break;
       case 'approve':
-        setDemoMerchants(prev => 
+        setDemoMerchants(prev =>
           prev.map(m => m.id === merchant.id ? { ...m, status: 'active' as const } : m)
         );
         break;
       case 'toggleStatus':
         const newStatus = merchant.status === 'active' ? 'suspended' : 'active';
-        setDemoMerchants(prev => 
+        setDemoMerchants(prev =>
           prev.map(m => m.id === merchant.id ? { ...m, status: newStatus } : m)
         );
         break;
@@ -996,7 +995,7 @@ export default function MerchantsPage() {
   };
 
   const handleEditSave = (updatedMerchant: MerchantData) => {
-    setDemoMerchants(prev => 
+    setDemoMerchants(prev =>
       prev.map(m => m.id === updatedMerchant.id ? updatedMerchant : m)
     );
   };
@@ -1222,7 +1221,7 @@ export default function MerchantsPage() {
         <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
           <h2 className="text-xl font-semibold text-slate-900 mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div 
+            <div
               onClick={() => handleQuickAction('approve', 'Approve Pending Merchants')}
               className="p-4 border border-slate-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition-colors cursor-pointer group"
             >
@@ -1233,7 +1232,7 @@ export default function MerchantsPage() {
               <p className="text-sm text-slate-600 mt-1">Review and approve merchant applications</p>
             </div>
 
-            <div 
+            <div
               onClick={() => handleQuickAction('announce', 'Send Announcements')}
               className="p-4 border border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer group"
             >
@@ -1244,7 +1243,7 @@ export default function MerchantsPage() {
               <p className="text-sm text-slate-600 mt-1">Communicate with all merchants</p>
             </div>
 
-            <div 
+            <div
               onClick={() => handleQuickAction('analytics', 'View Analytics')}
               className="p-4 border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-colors cursor-pointer group"
             >
@@ -1255,7 +1254,7 @@ export default function MerchantsPage() {
               <p className="text-sm text-slate-600 mt-1">Analyze merchant performance</p>
             </div>
 
-            <div 
+            <div
               onClick={() => handleQuickAction('policy', 'Policy Review')}
               className="p-4 border border-slate-200 rounded-xl hover:border-red-300 hover:bg-red-50 transition-colors cursor-pointer group"
             >
@@ -1276,7 +1275,7 @@ export default function MerchantsPage() {
               Comprehensive view of all merchants on the platform
             </p>
           </div>
-          
+
           {/* Custom Table Implementation */}
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -1307,7 +1306,7 @@ export default function MerchantsPage() {
                     <tr key={merchant.id} className="hover:bg-gray-50">
                       {columns.map((column) => (
                         <td key={column.key} className="px-6 py-4 whitespace-nowrap">
-                          {column.render 
+                          {column.render
                             ? column.render(merchant[column.key as keyof MerchantData], merchant)
                             : <span className="text-sm text-gray-900">{merchant[column.key as keyof MerchantData]}</span>
                           }
@@ -1348,13 +1347,13 @@ export default function MerchantsPage() {
                               variant="ghost"
                               onClick={() => handleMerchantAction('toggleStatus', merchant)}
                               className={
-                                merchant.status === 'active' 
-                                  ? "text-red-600 hover:text-red-800" 
+                                merchant.status === 'active'
+                                  ? "text-red-600 hover:text-red-800"
                                   : "text-blue-600 hover:text-blue-800"
                               }
                               title={
-                                merchant.status === 'active' 
-                                  ? "Suspend Merchant" 
+                                merchant.status === 'active'
+                                  ? "Suspend Merchant"
                                   : "Activate Merchant"
                               }
                             >
@@ -1382,7 +1381,7 @@ export default function MerchantsPage() {
               </tbody>
             </table>
           </div>
-          
+
           {/* Pagination */}
           {totalItems > itemsPerPage && (
             <div className="px-6 py-4 border-t border-gray-200">
@@ -1402,19 +1401,19 @@ export default function MerchantsPage() {
           )}
         </div>
       </div>
-      
+
       {/* Modals */}
       <AddMerchantModal
         isOpen={addMerchantModal}
         onClose={() => setAddMerchantModal(false)}
         onSave={handleAddMerchant}
       />
-      
+
       <SettingsModal
         isOpen={settingsModal}
         onClose={() => setSettingsModal(false)}
       />
-      
+
       <QuickActionModal
         isOpen={quickActionModal.isOpen}
         onClose={() => setQuickActionModal({ isOpen: false, action: '', title: '' })}
