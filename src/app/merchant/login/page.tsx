@@ -480,12 +480,7 @@ function MerchantLoginPageContent() {
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="text-center mt-8">
-            <p className="text-gray-500 text-sm">
-              © 2024 Beautify Business Portal. All rights reserved.
-            </p>
-          </div>
+          
         </div>
       </div>
     </div>

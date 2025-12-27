@@ -6,7 +6,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { Eye, EyeOff, Loader2, Store, ArrowRight, CheckCircle, MapPin, Building, Phone, Mail, Globe, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMerchantAuth } from '@/hooks/useMerchantAuth';
+import toast from 'react-hot-toast';
 
 interface MerchantRegistrationForm {
   // Personal Information
@@ -66,7 +66,7 @@ export default function MerchantRegisterPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { register: registerMerchant, isLoading } = useMerchantAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -118,6 +118,7 @@ export default function MerchantRegisterPage() {
 
   const onSubmit = async (data: MerchantRegistrationForm) => {
     try {
+      setIsLoading(true);
       clearErrors();
       
       // Validate passwords match
@@ -127,44 +128,23 @@ export default function MerchantRegisterPage() {
           message: 'Passwords do not match'
         });
         setCurrentStep(1);
+        setIsLoading(false);
         return;
       }
 
-      // Prepare data for API
-      const merchantData = {
-        email: data.email,
-        password: data.password,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        phone: data.phone,
-        businessName: data.businessName,
-        businessType: data.businessType,
-        businessEmail: data.businessEmail,
-        businessPhone: data.businessPhone,
-        businessAddress: {
-          street: data.street,
-          city: data.city,
-          state: data.state,
-          country: data.country,
-          zipCode: data.zipCode
-        },
-        serviceCategories: data.serviceCategories,
-        experienceYears: data.experienceYears,
-        website: data.website || undefined
-      };
-
-      const success = await registerMerchant(merchantData);
+      // Mock API call - simulate processing merchant registration
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      if (success) {
-        // Redirect to login page after successful registration
-        router.push('/merchant/login?registered=true');
-      }
+      // Show success toast notification
+      toast.success('Registration submitted! You will be contacted soon with next steps.');
+      
+      // Redirect to login page
+      router.push('/merchant/login?registered=true');
     } catch (error: any) {
       console.error('Registration error:', error);
-      setError('root', {
-        type: 'manual',
-        message: error.response?.data?.message || 'Registration failed. Please try again.'
-      });
+      toast.error('Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -638,7 +618,7 @@ export default function MerchantRegisterPage() {
             )}
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between pt-6 border-t border-gray-200">
+            <div className="flex justify-between mt-8">
               <button
                 type="button"
                 onClick={prevStep}
