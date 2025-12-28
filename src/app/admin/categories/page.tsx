@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import AdminLayout from '@/components/layout/AdminLayout';
 import {
   Plus,
   Edit2,
@@ -349,7 +348,7 @@ export default function CategoriesPage() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
+      <>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-black">Service Categories</h1>
@@ -358,12 +357,12 @@ export default function CategoriesPage() {
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
           </div>
         </div>
-      </AdminLayout>
+      </>
     );
   }
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -662,6 +661,6 @@ export default function CategoriesPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 }

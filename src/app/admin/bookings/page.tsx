@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import AdminLayout from '@/components/layout/AdminLayout';
 import EnhancedDataTable from '@/components/enhanced/EnhancedDataTable';
 import { usePaginatedApi } from '@/hooks/useApi';
 import {
@@ -485,7 +484,7 @@ export default function BookingsPage() {
   ];
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -617,6 +616,6 @@ export default function BookingsPage() {
           />
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

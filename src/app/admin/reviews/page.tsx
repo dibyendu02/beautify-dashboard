@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import AdminLayout from '@/components/layout/AdminLayout';
 import {
   Search,
   Filter,
@@ -316,7 +315,7 @@ export default function ReviewsPage() {
   const averageRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -737,6 +736,6 @@ export default function ReviewsPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 }

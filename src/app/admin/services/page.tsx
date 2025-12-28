@@ -338,7 +338,7 @@ export default function AdminServicesPage() {
   );
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
@@ -689,6 +689,6 @@ export default function AdminServicesPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 }

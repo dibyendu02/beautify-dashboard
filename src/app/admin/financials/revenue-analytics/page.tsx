@@ -17,7 +17,6 @@ import {
 } from 'lucide-react';
 import { cn, formatCurrency, formatDate } from '@/lib/utils';
 import Button from '@/components/ui/Button';
-import AdminLayout from '@/components/layout/AdminLayout';
 import toast from 'react-hot-toast';
 
 interface RevenueData {
@@ -115,7 +114,7 @@ export default function AdminRevenueAnalyticsPage() {
   const avgRevenuePerMerchant = currentRevenue.totalRevenue / totalMerchants;
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
@@ -378,6 +377,6 @@ export default function AdminRevenueAnalyticsPage() {
         </div>
       </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

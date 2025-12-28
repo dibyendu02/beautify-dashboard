@@ -25,7 +25,6 @@ import {
 import { cn, formatDate, formatCurrency } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Pagination from '@/components/ui/Pagination';
-import AdminLayout from '@/components/layout/AdminLayout';
 
 interface Customer {
   _id: string;
@@ -337,7 +336,7 @@ export default function CustomersPage() {
   };
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -634,6 +633,6 @@ export default function CustomersPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 }

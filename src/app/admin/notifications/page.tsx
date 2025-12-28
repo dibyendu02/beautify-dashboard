@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import AdminLayout from '@/components/layout/AdminLayout';
 import {
   Bell,
   CheckCircle,
@@ -229,7 +228,7 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -389,6 +388,6 @@ export default function NotificationsPage() {
             )}
           </div>
         </div>
-    </AdminLayout>
+    </>
   );
 }

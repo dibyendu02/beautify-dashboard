@@ -27,7 +27,6 @@ import {
 } from 'lucide-react';
 import { cn, formatDate } from '@/lib/utils';
 import Button from '@/components/ui/Button';
-import AdminLayout from '@/components/layout/AdminLayout';
 import toast from 'react-hot-toast';
 
 interface SecuritySettings {
@@ -203,7 +202,7 @@ export default function SecurityPage() {
   ];
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -649,6 +648,6 @@ export default function SecurityPage() {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

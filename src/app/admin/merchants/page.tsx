@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import AdminLayout from '@/components/layout/AdminLayout';
 import Pagination from '@/components/ui/Pagination';
 import {
   Store,
@@ -1168,7 +1167,7 @@ export default function MerchantsPage() {
   ];
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -1449,6 +1448,6 @@ export default function MerchantsPage() {
         merchant={selectedMerchant}
         onConfirm={handleDeleteConfirm}
       />
-    </AdminLayout>
+    </>
   );
 }

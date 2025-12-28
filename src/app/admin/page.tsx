@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import AdminLayout from '@/components/layout/AdminLayout';
 import AdminAnalytics from '@/components/enhanced/AdminAnalytics';
 import EnhancedDataTable from '@/components/enhanced/EnhancedDataTable';
 import {
@@ -318,7 +317,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-8">
         {/* Content Header */}
         <div className="flex justify-between items-center">
@@ -566,6 +565,6 @@ export default function AdminDashboard() {
           />
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import AdminLayout from '@/components/layout/AdminLayout';
 import {
   Search,
   Filter,
@@ -339,7 +338,7 @@ export default function BusinessProfilesPage() {
   const businessTypes = [...new Set(profiles.map(p => p.businessType))];
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -718,6 +717,6 @@ export default function BusinessProfilesPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
   );
 }

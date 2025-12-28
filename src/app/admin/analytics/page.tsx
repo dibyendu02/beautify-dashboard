@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import AdminLayout from '@/components/layout/AdminLayout';
 import { useApi } from '@/hooks/useApi';
 import {
   Users,
@@ -336,7 +335,7 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -674,6 +673,6 @@ export default function AnalyticsPage() {
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

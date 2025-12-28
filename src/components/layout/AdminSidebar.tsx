@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,7 +55,7 @@ const navigation = [
     icon: Building2,
     children: [
       { name: 'Merchant Applications', href: '/admin/applications', icon: FileText },
-      { name: 'Business Profiles', href: '/admin/businesses', icon: Building2 },
+      { name: 'Business Profiles', href: '/admin/business-profiles', icon: Building2 },
       { name: 'Categories', href: '/admin/categories', icon: Palette },
     ],
   },
@@ -98,7 +98,45 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+
+  const isItemActive = (href: string) => {
+    if (href === '/admin') {
+      return pathname === '/admin';
+    }
+    return pathname.startsWith(href);
+  };
+
+  const isParentActive = (children: { href: string }[]) => {
+    return children.some(child => isItemActive(child.href));
+  };
+
+  // Find which parent items should be expanded based on current path
+  const getInitialExpandedItems = useMemo(() => {
+    const expanded: string[] = [];
+    navigation.forEach(item => {
+      if (item.children && isParentActive(item.children)) {
+        expanded.push(item.name);
+      }
+    });
+    return expanded;
+  }, [pathname]);
+
+  const [expandedItems, setExpandedItems] = useState<string[]>(getInitialExpandedItems);
+
+  // Update expanded items when pathname changes
+  useEffect(() => {
+    const newExpanded: string[] = [];
+    navigation.forEach(item => {
+      if (item.children && isParentActive(item.children)) {
+        newExpanded.push(item.name);
+      }
+    });
+    // Only add new expanded items, don't collapse manually expanded ones
+    setExpandedItems(prev => {
+      const combined = new Set([...prev, ...newExpanded]);
+      return Array.from(combined);
+    });
+  }, [pathname]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -111,17 +149,6 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
         ? prev.filter(item => item !== itemName)
         : [...prev, itemName]
     );
-  };
-
-  const isItemActive = (href: string) => {
-    if (href === '/admin') {
-      return pathname === '/admin';
-    }
-    return pathname.startsWith(href);
-  };
-
-  const isParentActive = (children: any[]) => {
-    return children.some(child => isItemActive(child.href));
   };
 
   return (

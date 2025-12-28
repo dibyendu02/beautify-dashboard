@@ -26,7 +26,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
-import AdminLayout from '@/components/layout/AdminLayout';
 import { api } from '@/services/api';
 import toast from 'react-hot-toast';
 
@@ -212,7 +211,7 @@ export default function AdminSettingsPage() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
+      <>
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div>
@@ -227,12 +226,12 @@ export default function AdminSettingsPage() {
             </div>
           </div>
         </div>
-      </AdminLayout>
+      </>
     );
   }
 
   return (
-    <AdminLayout>
+    <>
       <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
@@ -697,6 +696,6 @@ export default function AdminSettingsPage() {
         </div>
       </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }
