@@ -28,6 +28,10 @@ import {
   Copy,
   Calendar as CalendarIcon,
   Smartphone,
+  Instagram,
+  Facebook,
+  Map,
+  LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
@@ -1040,20 +1044,24 @@ export default function SettingsPage() {
                     <h4 className="text-md font-medium text-gray-900 mb-4">Social Media & Marketing</h4>
                     <div className="space-y-4">
                       {[
-                        { key: 'instagramBusiness', name: 'Instagram Business', icon: '📸', desc: 'Showcase your work and attract customers' },
-                        { key: 'facebookBusiness', name: 'Facebook Business', icon: '👥', desc: 'Manage your business page and bookings' },
-                        { key: 'googleMyBusiness', name: 'Google My Business', icon: '🗺️', desc: 'Improve local search visibility' },
-                      ].map((integration) => (
+                        { key: 'instagramBusiness', name: 'Instagram Business', icon: Instagram, desc: 'Showcase your work and attract customers' },
+                        { key: 'facebookBusiness', name: 'Facebook Business', icon: Facebook, desc: 'Manage your business page and bookings' },
+                        { key: 'googleMyBusiness', name: 'Google My Business', icon: Map, desc: 'Improve local search visibility' },
+                      ].map((integration) => {
+                        const IconComponent = integration.icon;
+                        return (
                         <div key={integration.key} className="p-4 bg-gray-50 rounded-lg border">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                              <span className="text-2xl mr-3">{integration.icon}</span>
+                              <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
+                                <IconComponent className="w-5 h-5 text-gray-600" />
+                              </div>
                               <div>
                                 <h5 className="text-sm font-medium text-gray-900">{integration.name}</h5>
                                 <p className="text-sm text-gray-600">{integration.desc}</p>
                               </div>
                             </div>
-                            <Button 
+                            <Button
                               variant={(settings.integrations[integration.key as keyof typeof settings.integrations] as {connected: boolean}).connected ? "outline" : "primary"}
                               size="sm"
                             >
@@ -1061,7 +1069,8 @@ export default function SettingsPage() {
                             </Button>
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 

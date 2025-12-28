@@ -12,6 +12,8 @@ import {
   Package,
   Star,
   Trash2,
+  AlertTriangle,
+  Info,
 } from 'lucide-react';
 import { socketService } from '@/services/socket';
 import { formatRelativeTime, cn } from '@/lib/utils';
@@ -190,7 +192,9 @@ export default function NotificationCenter() {
     // Show toast for high/urgent priority notifications
     if (notification.priority === 'high' || notification.priority === 'urgent') {
       toast(notification.title, {
-        icon: notification.priority === 'urgent' ? '🚨' : 'ℹ️',
+        icon: notification.priority === 'urgent'
+          ? React.createElement(AlertTriangle, { className: 'w-5 h-5 text-red-500' })
+          : React.createElement(Info, { className: 'w-5 h-5 text-blue-500' }),
         duration: 5000,
       });
     }

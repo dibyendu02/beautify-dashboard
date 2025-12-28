@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { Menu, Bell, Search, Settings, Shield, User, Activity } from 'lucide-react';
+import { Menu, Bell, Search, Settings, Shield, User, Activity, ClipboardList, CreditCard, Cog, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AdminHeaderProps {
@@ -53,19 +53,18 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
 
   const unreadCount = notifications.filter(n => n.unread).length;
 
-  const getNotificationIcon = (type: string) => {
-    switch (type) {
-      case 'application':
-        return '📋';
-      case 'payment':
-        return '💳';
-      case 'system':
-        return '⚙️';
-      case 'alert':
-        return '⚠️';
-      default:
-        return '📢';
-    }
+  const notificationIcons: Record<string, React.ElementType> = {
+    application: ClipboardList,
+    payment: CreditCard,
+    system: Cog,
+    alert: AlertTriangle,
+  };
+
+  const notificationIconColors: Record<string, string> = {
+    application: 'bg-blue-100 text-blue-600',
+    payment: 'bg-green-100 text-green-600',
+    system: 'bg-gray-100 text-gray-600',
+    alert: 'bg-amber-100 text-amber-600',
   };
 
   return (
@@ -133,35 +132,39 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                     </div>
                   </div>
                   <div className="max-h-96 overflow-y-auto">
-                    {notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className={cn(
-                          'p-4 border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors',
-                          notification.unread && 'bg-indigo-50'
-                        )}
-                      >
-                        <div className="flex items-start">
-                          <span className="text-lg mr-3 mt-0.5">
-                            {getNotificationIcon(notification.type)}
-                          </span>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <p className="text-sm font-semibold text-black">
-                                {notification.title}
-                              </p>
-                              {notification.unread && (
-                                <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                              )}
+                    {notifications.map((notification) => {
+                      const Icon = notificationIcons[notification.type] || Bell;
+                      const iconColor = notificationIconColors[notification.type] || 'bg-gray-100 text-gray-600';
+                      return (
+                        <div
+                          key={notification.id}
+                          className={cn(
+                            'p-4 border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition-colors',
+                            notification.unread && 'bg-indigo-50'
+                          )}
+                        >
+                          <div className="flex items-start">
+                            <div className={cn('p-2 rounded-full flex-shrink-0 mr-3', iconColor)}>
+                              <Icon className="w-4 h-4" />
                             </div>
-                            <p className="text-sm text-black mb-1">
-                              {notification.message}
-                            </p>
-                            <p className="text-xs text-black">{notification.time}</p>
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between mb-1">
+                                <p className="text-sm font-semibold text-black">
+                                  {notification.title}
+                                </p>
+                                {notification.unread && (
+                                  <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                                )}
+                              </div>
+                              <p className="text-sm text-black mb-1">
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-black">{notification.time}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <div className="p-3 border-t border-slate-200 bg-slate-50">
                     <button className="text-sm text-indigo-600 hover:text-indigo-700 font-medium w-full text-center">

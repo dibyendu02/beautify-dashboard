@@ -264,7 +264,7 @@ export default function AdvancedMarketingManager() {
     {
       _id: '2',
       platform: 'facebook',
-      content: 'Client showcase: Amazing hair transformation by our team! 💇‍♀️',
+      content: 'Client showcase: Amazing hair transformation by our team!',
       status: 'published',
       engagement: {
         likes: 156,

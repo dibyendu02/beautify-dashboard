@@ -13,7 +13,18 @@ import {
   EyeOff,
   Settings,
   Palette,
-  X
+  X,
+  Sparkles,
+  Scissors,
+  Hand,
+  Heart,
+  Droplets,
+  Crown,
+  Flower2,
+  Star,
+  Snowflake,
+  User,
+  LucideIcon
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Pagination from '@/components/ui/Pagination';
@@ -39,13 +50,28 @@ interface CategoryFormData {
   sortOrder: number;
 }
 
+// Icon mapping for categories
+const categoryIcons: Record<string, LucideIcon> = {
+  sparkles: Sparkles,
+  scissors: Scissors,
+  hand: Hand,
+  heart: Heart,
+  droplets: Droplets,
+  crown: Crown,
+  flower: Flower2,
+  star: Star,
+  snowflake: Snowflake,
+  user: User,
+  eye: Eye,
+};
+
 // Mock categories data
 const mockCategories: Category[] = [
   {
     _id: 'cat-001',
     name: 'Facial Treatments',
     description: 'Professional facial care and skin treatments',
-    icon: '💆‍♀️',
+    icon: 'sparkles',
     color: '#ec4899',
     isActive: true,
     sortOrder: 1,
@@ -57,7 +83,7 @@ const mockCategories: Category[] = [
     _id: 'cat-002',
     name: 'Hair Services',
     description: 'Hair cutting, styling, and coloring services',
-    icon: '✂️',
+    icon: 'scissors',
     color: '#3b82f6',
     isActive: true,
     sortOrder: 2,
@@ -69,7 +95,7 @@ const mockCategories: Category[] = [
     _id: 'cat-003',
     name: 'Nail Care',
     description: 'Manicure, pedicure, and nail art services',
-    icon: '💅',
+    icon: 'hand',
     color: '#f59e0b',
     isActive: true,
     sortOrder: 3,
@@ -81,7 +107,7 @@ const mockCategories: Category[] = [
     _id: 'cat-004',
     name: 'Massage Therapy',
     description: 'Therapeutic and relaxation massage treatments',
-    icon: '🧖‍♀️',
+    icon: 'heart',
     color: '#10b981',
     isActive: true,
     sortOrder: 4,
@@ -93,7 +119,7 @@ const mockCategories: Category[] = [
     _id: 'cat-005',
     name: 'Makeup Services',
     description: 'Professional makeup application and lessons',
-    icon: '💄',
+    icon: 'sparkles',
     color: '#8b5cf6',
     isActive: true,
     sortOrder: 5,
@@ -105,7 +131,7 @@ const mockCategories: Category[] = [
     _id: 'cat-006',
     name: 'Eyebrow & Lash',
     description: 'Eyebrow shaping, microblading, and lash extensions',
-    icon: '👁️',
+    icon: 'eye',
     color: '#ef4444',
     isActive: true,
     sortOrder: 6,
@@ -117,7 +143,7 @@ const mockCategories: Category[] = [
     _id: 'cat-007',
     name: 'Body Treatments',
     description: 'Body wraps, scrubs, and spa treatments',
-    icon: '🌸',
+    icon: 'flower',
     color: '#06b6d4',
     isActive: true,
     sortOrder: 7,
@@ -129,7 +155,7 @@ const mockCategories: Category[] = [
     _id: 'cat-008',
     name: 'Skincare',
     description: 'Advanced skincare treatments and consultations',
-    icon: '✨',
+    icon: 'droplets',
     color: '#84cc16',
     isActive: true,
     sortOrder: 8,
@@ -141,7 +167,7 @@ const mockCategories: Category[] = [
     _id: 'cat-009',
     name: 'Wellness',
     description: 'Holistic wellness and alternative therapies',
-    icon: '🧊',
+    icon: 'snowflake',
     color: '#6366f1',
     isActive: false,
     sortOrder: 9,
@@ -153,7 +179,7 @@ const mockCategories: Category[] = [
     _id: 'cat-010',
     name: 'Men\'s Grooming',
     description: 'Specialized grooming services for men',
-    icon: '🪒',
+    icon: 'user',
     color: '#dc2626',
     isActive: true,
     sortOrder: 10,
@@ -165,7 +191,7 @@ const mockCategories: Category[] = [
     _id: 'cat-011',
     name: 'Bridal Services',
     description: 'Complete bridal beauty packages',
-    icon: '👑',
+    icon: 'crown',
     color: '#fbbf24',
     isActive: true,
     sortOrder: 11,
@@ -177,7 +203,7 @@ const mockCategories: Category[] = [
     _id: 'cat-012',
     name: 'Teen Services',
     description: 'Age-appropriate beauty services for teenagers',
-    icon: '🌺',
+    icon: 'star',
     color: '#f472b6',
     isActive: false,
     sortOrder: 12,
@@ -205,8 +231,8 @@ export default function CategoriesPage() {
   });
 
   const iconOptions = [
-    '💅', '💄', '✂️', '🧴', '🪒', '🧖‍♀️', '💆‍♀️', '🧊',
-    '🌸', '💐', '🌺', '🌿', '🍃', '✨', '💎', '👑', '👁️', '🌊'
+    'sparkles', 'scissors', 'hand', 'heart', 'droplets', 'crown',
+    'flower', 'star', 'snowflake', 'user', 'eye'
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -415,11 +441,14 @@ export default function CategoriesPage() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center space-x-3 flex-1">
                   {category.icon && (
-                    <div 
-                      className="w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                       style={{ backgroundColor: category.color + '20', color: category.color }}
                     >
-                      {category.icon}
+                      {(() => {
+                        const IconComponent = categoryIcons[category.icon];
+                        return IconComponent ? <IconComponent className="w-5 h-5" /> : null;
+                      })()}
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
@@ -555,19 +584,22 @@ export default function CategoriesPage() {
                     <label className="block text-sm font-medium text-black mb-2">
                       Icon
                     </label>
-                    <div className="grid grid-cols-8 gap-2">
-                      {iconOptions.map((icon, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, icon })}
-                          className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center text-lg hover:bg-gray-50 ${
-                            formData.icon === icon ? 'border-primary-500 bg-primary-50' : 'border-gray-200'
-                          }`}
-                        >
-                          {icon}
-                        </button>
-                      ))}
+                    <div className="grid grid-cols-6 gap-2">
+                      {iconOptions.map((iconKey) => {
+                        const IconComponent = categoryIcons[iconKey];
+                        return (
+                          <button
+                            key={iconKey}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, icon: iconKey })}
+                            className={`w-10 h-10 rounded-lg border-2 flex items-center justify-center hover:bg-gray-50 ${
+                              formData.icon === iconKey ? 'border-primary-500 bg-primary-50' : 'border-gray-200'
+                            }`}
+                          >
+                            {IconComponent && <IconComponent className="w-5 h-5 text-gray-600" />}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 

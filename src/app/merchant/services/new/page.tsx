@@ -14,6 +14,13 @@ import {
   Tag,
   FileText,
   Image as ImageIcon,
+  Droplets,
+  Scissors,
+  Hand,
+  Heart,
+  Sparkles,
+  Eye,
+  LucideIcon,
 } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -37,16 +44,26 @@ interface Category {
   color?: string;
 }
 
+// Icon mapping for categories
+const categoryIcons: Record<string, LucideIcon> = {
+  droplets: Droplets,
+  scissors: Scissors,
+  hand: Hand,
+  heart: Heart,
+  sparkles: Sparkles,
+  eye: Eye,
+};
+
 // Demo categories data
 const DEMO_CATEGORIES = [
-  { _id: '1', name: 'Facial Treatments', icon: '🧴' },
-  { _id: '2', name: 'Hair Services', icon: '✂️' },
-  { _id: '3', name: 'Nail Care', icon: '💅' },
-  { _id: '4', name: 'Body Treatments', icon: '🧖‍♀️' },
-  { _id: '5', name: 'Massage Therapy', icon: '💆‍♀️' },
-  { _id: '6', name: 'Skincare', icon: '🧴' },
-  { _id: '7', name: 'Makeup Services', icon: '💄' },
-  { _id: '8', name: 'Eyebrow & Lash', icon: '👁️' },
+  { _id: '1', name: 'Facial Treatments', icon: 'droplets' },
+  { _id: '2', name: 'Hair Services', icon: 'scissors' },
+  { _id: '3', name: 'Nail Care', icon: 'hand' },
+  { _id: '4', name: 'Body Treatments', icon: 'heart' },
+  { _id: '5', name: 'Massage Therapy', icon: 'heart' },
+  { _id: '6', name: 'Skincare', icon: 'droplets' },
+  { _id: '7', name: 'Makeup Services', icon: 'sparkles' },
+  { _id: '8', name: 'Eyebrow & Lash', icon: 'eye' },
 ];
 
 export default function NewServicePage() {
@@ -200,7 +217,7 @@ export default function NewServicePage() {
                     </option>
                     {DEMO_CATEGORIES.map((category) => (
                       <option key={category._id} value={category.name}>
-                        {category.icon} {category.name}
+                        {category.name}
                       </option>
                     ))}
                   </select>

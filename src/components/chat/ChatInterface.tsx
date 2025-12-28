@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Phone, Video, Paperclip, Smile, MoreVertical, X } from 'lucide-react';
+import { Send, Phone, Video, Paperclip, Smile, MoreVertical, X, Check, CheckCheck } from 'lucide-react';
 import { socketService } from '@/services/socket';
 import { formatDate } from '@/lib/utils';
 import Button from '@/components/ui/Button';
@@ -316,8 +316,8 @@ export default function ChatInterface({
                 <div className={`text-xs text-gray-500 mt-1 ${isOwn ? 'text-right' : 'text-left'}`}>
                   {getMessageTime(message.timestamp)}
                   {isOwn && (
-                    <span className="ml-1">
-                      {message.read ? '✓✓' : '✓'}
+                    <span className="ml-1 inline-flex">
+                      {message.read ? <CheckCheck className="w-3 h-3" /> : <Check className="w-3 h-3" />}
                     </span>
                   )}
                 </div>
